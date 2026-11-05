@@ -1,0 +1,322 @@
+{
+  "_comment": "Company settings for the HR Command Center. Copy this file to config/company.<yourco>.json and edit. Every value below was verified at Al Faihaa on 12 Oct 2026; re-verify each one at a new site (see docs/ADAPTATION_CHECKLIST.md).",
+  "company": "Faiha Group",
+  "scope": "central database for all four branches and HQ",
+  "currency": "SAR",
+  "cure": {
+    "hr_branch_param": "Riyadh",
+    "schema_prefix": "EXSYS.",
+    "note": "Payroll and HR live in ONE database (the head-office branch). Other branch databases hold no payroll rows."
+  },
+  "active_staff": "PS_STAFF_CONTRACT.STATUS = 'A' AND CURRENT_CONTRACT = 'Y'",
+  "saudi_nationality_code": 420,
+  "branches": [
+    {
+      "k": "00",
+      "name": "HQ and administration"
+    },
+    {
+      "k": "01",
+      "name": "Riyadh clinic"
+    },
+    {
+      "k": "02",
+      "name": "BUR1"
+    },
+    {
+      "k": "03",
+      "name": "BUR2"
+    },
+    {
+      "k": "04",
+      "name": "Rafha"
+    }
+  ],
+  "branch_rule": "First two characters of PS_STAFF_INTERNAL_TRANSFERS.ORGANIZATION_NO of the current job (CURRENT_JOB = 'Y'); exception: cost centres 001/002/003/004 are the branch administration centres and map to branches 01/02/03/04",
+  "accounts": {
+    "eosb": "2111001",
+    "leave": "2111003",
+    "payables": "2121001"
+  },
+  "gl_sign_note": "GL_TRANSACTIONS_DETAILS: DR_AMOUNT and CR_AMOUNT (not DEBIT/CREDIT). Always filter STATUS = 'P' for balances.",
+  "leave_types": {
+    "long": "17",
+    "short": "09"
+  },
+  "leave_labels": {
+    "long": "Type 17",
+    "short": "Type 09"
+  },
+  "loan_status_note": "Status P is paid, R is rescheduled (replaced by later installments) and N is pending. Only N is still owed.",
+  "eosb_rule": "0.5 month per year for the first 5 years, then 1 month per year (Saudi Labor Law art. 84 full award). Estimate A uses BASIC_SALARY; estimate B adds salary items 1 (housing) and 2 (transport).",
+  "eosb_housing_transport_items": [
+    1,
+    2
+  ],
+  "thresholds": {
+    "eosb_gap_pct": 5,
+    "cancel_rate_pct": 10,
+    "spike_sigma": 2.0,
+    "spike_min_multiple": 2.0,
+    "absence_spike_multiple": 2.5,
+    "overtime_ratio": 4.0,
+    "turnover_medium_pct": 30,
+    "turnover_low_pct": 15,
+    "missing_field_min_pct": 5
+  },
+  "plan_defaults": {
+    "hires": 8,
+    "attrition": 28,
+    "cost": 6300
+  },
+  "owners": {
+    "contracts": "HR administration",
+    "payroll": "Payroll and accounting",
+    "loans": "Payroll and finance",
+    "compliance": "Government relations",
+    "provisions": "Accounting",
+    "master": "HR administration",
+    "leave": "HR administration",
+    "hr_manager": "HR manager",
+    "branch": "Branch managers"
+  },
+  "id_types_residence": [
+    "I",
+    "N",
+    "B"
+  ],
+  "id_type_passport": "P",
+  "id_types_note": "PS_STAFF_IDS.ID_TYPE_CODE: I iqama card, N national ID, B border ID, P passport (CODES_MASTER). ID_CURRENT is 'Y' for only 5 rows at Al Faihaa, so do not filter on it.",
+  "company_ar": "مجموعة الفيحاء",
+  "scope_ar": "قاعدة البيانات المركزية لجميع الفروع والمقر الرئيسي",
+  "leave_labels_ar": {
+    "long": "نوع 17",
+    "short": "نوع 09"
+  },
+  "loan_status_note_ar": "الحالة P مسددة، و R معاد جدولتها (تحل محلها أقساط لاحقة)، و N معلّقة. المستحق فعليًا هو N فقط.",
+  "owners_ar": {
+    "contracts": "إدارة الموارد البشرية",
+    "payroll": "الرواتب والحسابات",
+    "loans": "الرواتب والمالية",
+    "compliance": "العلاقات الحكومية",
+    "provisions": "الحسابات",
+    "master": "إدارة الموارد البشرية",
+    "leave": "إدارة الموارد البشرية",
+    "hr_manager": "مدير الموارد البشرية",
+    "branch": "مديرو الفروع"
+  },
+  "movement": {
+    "_comment": "Used by scripts/movement.py. job_families: first match wins on a lower-case substring of the Cure job title; the last entry is the default. nationalities: CODES_MASTER type 105 CODE_NO -> names.",
+    "job_families": [
+      {
+        "key": "reception",
+        "en": "Reception",
+        "ar": "استقبال",
+        "m": [
+          "reception"
+        ]
+      },
+      {
+        "key": "midwife",
+        "en": "Midwives",
+        "ar": "قابلات",
+        "m": [
+          "midwife"
+        ]
+      },
+      {
+        "key": "nurse",
+        "en": "Nurses",
+        "ar": "تمريض",
+        "m": [
+          "nurse"
+        ]
+      },
+      {
+        "key": "tech",
+        "en": "Lab and X-ray technicians",
+        "ar": "فنيو مختبر وأشعة",
+        "m": [
+          "laboratory technician",
+          "laboratory specialist",
+          "x-ray",
+          "laboratory"
+        ]
+      },
+      {
+        "key": "secr",
+        "en": "Insurance secretaries and secretariat",
+        "ar": "سكرتارية وتأمين طبي",
+        "m": [
+          "medical insurance secretary",
+          "secretariat"
+        ]
+      },
+      {
+        "key": "pharm",
+        "en": "Pharmacy",
+        "ar": "صيدلة",
+        "m": [
+          "pharmac"
+        ]
+      },
+      {
+        "key": "work",
+        "en": "Workers and drivers",
+        "ar": "عمال وسائقون",
+        "m": [
+          "worker",
+          "driver",
+          "سائق"
+        ]
+      },
+      {
+        "key": "doc",
+        "en": "Doctors and dentists",
+        "ar": "أطباء وأسنان",
+        "m": [
+          "doctor",
+          "specialist",
+          "dental",
+          "internist",
+          "obstetrics",
+          "orthopedic",
+          "opthalmology",
+          "radiology",
+          "resident",
+          "skin",
+          "urology",
+          "gp",
+          "dialysis",
+          "ear, nose",
+          "child"
+        ]
+      },
+      {
+        "key": "admin",
+        "en": "Administrative and support",
+        "ar": "إداريون ودعم",
+        "m": []
+      }
+    ],
+    "nationalities": {
+      "420": {
+        "en": "Saudi",
+        "ar": "سعودي"
+      },
+      "421": {
+        "en": "Egyptian",
+        "ar": "مصري"
+      },
+      "422": {
+        "en": "Indian",
+        "ar": "هندي"
+      },
+      "423": {
+        "en": "Filipino",
+        "ar": "فلبيني"
+      },
+      "2619": {
+        "en": "Indonesian",
+        "ar": "إندونيسي"
+      },
+      "2628": {
+        "en": "Pakistani",
+        "ar": "باكستاني"
+      },
+      "2639": {
+        "en": "Sudanese",
+        "ar": "سوداني"
+      },
+      "2861": {
+        "en": "Bangladeshi",
+        "ar": "بنغلاديشي"
+      },
+      "2863": {
+        "en": "Nepalese",
+        "ar": "نيبالي"
+      },
+      "3851": {
+        "en": "Stateless (displaced tribes)",
+        "ar": "بدون (قبائل نازحة)"
+      },
+      "15084": {
+        "en": "Stateless (displaced tribes)",
+        "ar": "بدون (قبائل نازحة)"
+      },
+      "3857": {
+        "en": "Ugandan",
+        "ar": "أوغندي"
+      },
+      "2637": {
+        "en": "Moroccan",
+        "ar": "مغربي"
+      },
+      "2917": {
+        "en": "Yemeni",
+        "ar": "يمني"
+      },
+      "?": {
+        "en": "Not recorded",
+        "ar": "غير مسجّل"
+      }
+    },
+    "nat_merge": {
+      "15084": "3851"
+    }
+  },
+  "salary": {
+    "_comment": "Used by scripts/salary.py. job_ar: Arabic names for the Cure job titles (titles not listed show in English).",
+    "job_ar": {
+      "Administrative secretary": "سكرتير إداري",
+      "Administrative": "إداري",
+      "Customer Service Coordinator": "منسق خدمة العملاء",
+      "Driver": "سائق",
+      "Executive Manager": "مدير تنفيذي",
+      "General Director": "المدير العام",
+      "IT": "تقنية المعلومات",
+      "MARKETING": "تسويق",
+      "Nurse": "تمريض",
+      "Public Accountant": "محاسب قانوني",
+      "Reception": "استقبال",
+      "Secretariat": "سكرتارية",
+      "The warehouse department": "قسم المستودع",
+      "Warehouse": "مستودع",
+      "Worker": "عامل",
+      "financial manager": "مدير مالي",
+      "midwife": "قابلة",
+      "pharmacist": "صيدلي",
+      "treasurer": "أمين صندوق",
+      "سائق": "سائق",
+      "Administrative Doctor": "طبيب إداري",
+      "Administrator": "مسؤول إداري",
+      "Child Specialist": "أخصائي أطفال",
+      "Dental": "أسنان",
+      "Department of Dialysis": "قسم الغسيل الكلوي",
+      "Ear, Nose and Throat Specialist": "أخصائي أنف وأذن وحنجرة",
+      "Eye doctor": "طبيب عيون",
+      "General Doctor": "طبيب عام",
+      "Internist": "باطنة",
+      "Laboratory Specialist": "أخصائي مختبر",
+      "Laboratory Technician": "فني مختبر",
+      "Medical Insurance Secretary": "سكرتير تأمين طبي",
+      "Obstetrics and Gynaecology": "نساء وولادة",
+      "Orthopedic": "عظام",
+      "Private Duty Nurse": "ممرض خاص",
+      "Radiology": "أشعة",
+      "Resident Pediatrician": "طبيب أطفال مقيم",
+      "Resident gynecologist": "طبيب نساء وولادة مقيم",
+      "Skin Specialist": "جلدية",
+      "Urology": "مسالك بولية",
+      "X-ray technician": "فني أشعة",
+      "Insurance/ER": "تأمين وطوارئ",
+      "Laboratory": "مختبر",
+      "Orthopedic specialist": "أخصائي عظام",
+      "Specialist Internist": "أخصائي باطنة",
+      "Corporate department administrator": "إداري إدارة الشركات",
+      "Opthalmology": "عيون",
+      "Urology resident doctor": "طبيب مسالك بولية مقيم",
+      "GP": "طبيب ممارس عام"
+    }
+  }
+}

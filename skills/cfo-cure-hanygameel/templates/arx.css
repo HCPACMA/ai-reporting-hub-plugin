@@ -1,0 +1,51 @@
+/* ===== AR Audit section ===== */
+.arx-find{display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.arx-find .it{border:1px solid var(--border); border-radius:10px; padding:11px 13px; background:var(--surface); display:flex; flex-direction:column; gap:5px;}
+.arx-find .it.s3{border-color:var(--flag-border); background:var(--flag-bg);}
+.arx-find .it .h{display:flex; justify-content:space-between; gap:8px; align-items:baseline;}
+.arx-find .it .t{font-weight:600; font-size:13px; color:var(--ink);}
+.arx-find .it .ar{direction:rtl; font-size:12.5px; color:var(--ink-muted); font-family:"IBM Plex Sans","Segoe UI",Tahoma,sans-serif;}
+.arx-find .it .m{font-size:11.5px; color:var(--ink-muted); line-height:1.5;}
+.arx-find .it .m a{cursor:pointer;}
+.arx-find .it .amt{font-variant-numeric:tabular-nums; font-weight:700; font-size:13px; white-space:nowrap;}
+.arx-dup{margin-top:14px; border:1px solid var(--flag-border); background:var(--flag-bg); border-radius:10px; padding:13px 15px; font-size:12.5px; line-height:1.6; color:var(--ink);}
+.arx-dup table{margin-top:8px;}
+.arx-dup.ok{border-color:var(--good); background:var(--good-soft);}
+.arx-dup .ar{direction:rtl; font-family:"IBM Plex Sans","Segoe UI",Tahoma,sans-serif; color:var(--ink-muted);}
+.arx-c{display:inline-grid; place-items:center; width:22px; height:20px; border-radius:6px; font-size:11px; font-weight:700;}
+.arx-c.ok{background:var(--good-soft); color:var(--good);}
+.arx-c.tpa,.arx-c.split,.arx-c.miss{background:var(--warning-soft); color:var(--warning);}
+.arx-c.bad{background:var(--critical-soft); color:var(--critical);}
+.arx-c.na{background:var(--surface-2); color:var(--ink-faint);}
+.arx-t td.ctr,.arx-t th.ctr{text-align:center; padding-left:4px; padding-right:4px;}
+.arx-t tr.s3 td:first-child{box-shadow:inset 3px 0 0 var(--critical);}
+.arx-t tr.s2 td:first-child{box-shadow:inset 3px 0 0 var(--warning);}
+.arx-t{font-size:12px; table-layout:auto;}
+.aud-t.arx-t td:first-child{padding-left:9px; white-space:nowrap;}
+.aud-t.arx-t td{padding-top:7px; padding-bottom:7px; padding-right:6px;}
+.aud-t.arx-t td:not(:first-child){padding-left:6px;}
+.aud-t.arx-t th{padding:8px 6px;}
+.arx-t td.rem{max-width:135px;}
+.arx-t td.per{max-width:115px;}
+.arx-t .cust{direction:rtl; text-align:right; font-family:"IBM Plex Sans","Segoe UI",Tahoma,sans-serif; max-width:135px;}
+.arx-t .sm{display:block; font-size:10.5px; color:var(--ink-faint);}
+.aud-t.arx-t tr.aud-sub td{white-space:normal; padding-left:14px;}
+.arx-det{max-width:1040px; display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:14px 22px; padding:6px 0 10px;}
+@media (max-width:900px){ .arx-det{grid-template-columns:1fr;} }
+.arx-det h4{margin:0 0 6px; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+.arx-det dl{display:grid; grid-template-columns:max-content 1fr; gap:3px 12px; margin:0; font-size:12px;}
+.arx-det dt{color:var(--ink-faint);} .arx-det dd{margin:0; color:var(--ink); overflow-wrap:anywhere;}
+.arx-det ul{margin:0; padding-left:16px; font-size:12px; line-height:1.55;}
+.arx-det li{margin:2px 0;}
+.arx-det li .lb{font-weight:600;}
+.arx-det li .lb-ar{direction:rtl; unicode-bidi:isolate; color:var(--ink-muted); font-family:"IBM Plex Sans","Segoe UI",Tahoma,sans-serif;}
+.arx-det .doc{border-top:1px dashed var(--border); padding:5px 0; font-size:11.5px; color:var(--ink-muted); line-height:1.5;}
+.arx-det .doc b{color:var(--ink);}
+.arx-leg{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:11.5px; color:var(--ink-muted); margin:4px 0 10px;}
+.arx-leg span{display:inline-flex; align-items:center; gap:5px;}
+
+.ar-xbar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:-4px 0 16px;}
+.ar-xbtn{font:inherit; font-size:12.5px; font-weight:600; border:1px solid var(--accent-line); background:var(--accent-soft); color:var(--accent); border-radius:8px; padding:7px 13px; cursor:pointer;}
+.ar-xbtn:hover{background:var(--accent); color:var(--surface);}
+.ar-xbtn:disabled{opacity:.5; cursor:default;}
+.ar-xmsg{font-size:12px; color:var(--ink-muted);}

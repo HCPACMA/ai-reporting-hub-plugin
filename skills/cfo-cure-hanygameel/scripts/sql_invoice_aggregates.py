@@ -1,0 +1,43 @@
+import sys
+P=sys.argv[1]; D0=sys.argv[2]; D1=sys.argv[3]; kind=sys.argv[4]; B=sys.argv[5] if len(sys.argv)>5 else '60'
+PT=f"CASE WHEN E.CONTRACT_NO = TO_NUMBER({P or 'EXSYS.'}GET_PARAMETER('AD_CASH_CONTRACT')) THEN 'Cash' WHEN M.PATIENT_INVOICE_TYPE='R' THEN 'Credit' ELSE 'Cash' END"
+if not P: PT=PT.replace("EXSYS.GET_PARAMETER","GET_PARAMETER")
+NET="(NVL(C.BILL_AMOUNT,0)-NVL(C.BILL_DISCOUNT,0)-DECODE(C.BILL_TO,'P',0,NVL(C.BILL_PATIENT_SHARE,0))-NVL(C.VAT_AMT,0))"
+GRS="(NVL(C.BILL_AMOUNT,0)-DECODE(C.BILL_TO,'P',0,NVL(C.BILL_PATIENT_SHARE,0))-NVL(C.VAT_AMT,0))"
+def base(cols_inv, cols_ref):
+    j=(f"JOIN {P}RC_PATIENT_EPISODES E ON E.PATIENT_FILE_NO=M.PATIENT_FILE_NO AND E.ORGANIZATION_NO=M.ORGANIZATION_NO AND E.EPISODE_NO=M.EPISODE_NO "
+       f"LEFT JOIN {P}RC_SERVICES S ON S.PRODUCT_CODE=C.PRODUCT_CODE LEFT JOIN {P}RC_CLINICAL_SPECIALITIES CS ON CS.SPECIALTY_NO=S.SPECIALTY_NO "
+       f"LEFT JOIN {P}RC_CLINICAL_STAFF SF ON SF.STAFF_ID=M.DOCTOR_ID LEFT JOIN {P}RC_CLINICAL_SPECIALITIES SPD ON SPD.SPECIALTY_NO=SF.SPECIALTY_NO ")
+    inv=(f"SELECT {cols_inv} FROM {P}RC_PATIENT_INVOICES M JOIN {P}RC_PATIENT_INVOICE_CHARGES C ON M.ORGANIZATION_NO=C.ORGANIZATION_NO AND M.PATIENT_INVOICE_NO=C.PATIENT_INVOICE_NO {j}"
+         f"WHERE M.STATUS='P' AND C.STATUS='P' AND C.BILL_TO IN ('C','G','P') AND M.PATIENT_INVOICE_DATE>=DATE '{D0}' AND M.PATIENT_INVOICE_DATE<DATE '{D1}'")
+    ref=(f"SELECT {cols_ref} FROM {P}RC_PATIENT_REFUND_INVOICES R JOIN {P}RC_PATIENT_RETURN_INV_CHARGES C ON R.ORGANIZATION_NO=C.ORGANIZATION_NO AND R.REFUND_INVOICE_NO=C.REFUND_INVOICE_NO "
+         f"JOIN {P}RC_PATIENT_INVOICES M ON R.ORGANIZATION_NO=M.ORGANIZATION_NO AND R.PATIENT_INVOICE_NO=M.PATIENT_INVOICE_NO {j}"
+         f"WHERE M.STATUS='P' AND C.STATUS='P' AND R.STATUS='P' AND C.BILL_TO IN ('C','G','P') AND R.REFUND_INVOICE_DATE>=DATE '{D0}' AND R.REFUND_INVOICE_DATE<DATE '{D1}'")
+    return inv+" UNION ALL "+ref
+SP="TRANSLATE(NVL(SPD.DESCRIPTION_P,'-'),'|~:,',' ')"
+PH="CASE WHEN NVL(CS.DESCRIPTION_P,'-')='Pharmacy' THEN 'Y' ELSE 'N' END"
+if kind=='daily':
+    b=base(f"TRUNC(M.PATIENT_INVOICE_DATE) dt, {PT} pt, {SP} sp, {PH} ph, {NET} net",
+           f"TRUNC(R.REFUND_INVOICE_DATE), {PT}, {SP}, {PH}, -{NET}")
+    q=(f"SELECT bkt, COUNT(*) n, LISTAGG(r,'~') WITHIN GROUP (ORDER BY r) r FROM (SELECT MOD(ROWNUM,{B}) bkt, pt||'|'||sp||'|'||ym||'|'||dl r FROM (SELECT pt, sp, ym, LISTAGG(dd||':'||n1||':'||n2,',') WITHIN GROUP (ORDER BY dd) dl FROM "
+       f"(SELECT pt, sp, TO_CHAR(dt,'YYYYMM') ym, TO_CHAR(dt,'DD') dd, ROUND(SUM(net)) n1, ROUND(SUM(CASE WHEN ph='N' THEN net ELSE 0 END)) n2 FROM ({b}) GROUP BY pt, sp, TO_CHAR(dt,'YYYYMM'), TO_CHAR(dt,'DD')) GROUP BY pt, sp, ym)) GROUP BY bkt")
+elif kind=='doc':
+    DN=f"TRANSLATE(NVL({P}GET_STAFF_MAIDEN_NAME(M.DOCTOR_ID),M.DOCTOR_ID),'|~',' ')"
+    b=base(f"TO_CHAR(M.PATIENT_INVOICE_DATE,'YYYYMM') ym, TRUNC(M.PATIENT_INVOICE_DATE) dt, {PT} pt, M.DOCTOR_ID did, {SP} sp, {PH} ph, {NET} net",
+           f"TO_CHAR(R.REFUND_INVOICE_DATE,'YYYYMM'), TRUNC(R.REFUND_INVOICE_DATE), {PT}, M.DOCTOR_ID, {SP}, {PH}, -{NET}")
+    q=(f"SELECT bkt, COUNT(*) n, LISTAGG(r,'~') WITHIN GROUP (ORDER BY r) r FROM (SELECT MOD(ROWNUM,{B}) bkt, ym||'|'||pt||'|'||did||'|'||sp||'|'||n1||'|'||n2||'|'||nd r FROM "
+       f"(SELECT ym, pt, did, sp, ROUND(SUM(net),2) n1, ROUND(SUM(CASE WHEN ph='N' THEN net ELSE 0 END),2) n2, COUNT(DISTINCT dt) nd FROM ({b}) GROUP BY ym, pt, did, sp)) GROUP BY bkt")
+if kind=='cash':
+    NM=f"TRANSLATE(NVL({P}GET_STAFF_MAIDEN_NAME(cid),cid),'|~'||CHR(10)||CHR(13),'    ')"
+    b=(base(f"TO_CHAR(M.PATIENT_INVOICE_DATE,'YYYYMM') ym, M.STAFF_ID cid, {PT} pt, 0 rf, TO_NUMBER(TO_CHAR(M.PATIENT_INVOICE_DATE,'HH24')) hh, {GRS} g, NVL(C.BILL_DISCOUNT,0) d, {NET} net",
+            f"TO_CHAR(R.REFUND_INVOICE_DATE,'YYYYMM'), R.STAFF_ID, {PT}, 1, TO_NUMBER(TO_CHAR(R.REFUND_INVOICE_DATE,'HH24')), -{GRS}, -NVL(C.BILL_DISCOUNT,0), -{NET}"))
+    q=(f"SELECT bkt, COUNT(*) n, LISTAGG(r,'~') WITHIN GROUP (ORDER BY r) r FROM (SELECT MOD(ROWNUM,{B}) bkt, ym||'|'||cid||'|'||{NM}||'|'||pt||'|'||ln||'|'||g||'|'||d||'|'||nt||'|'||rn||'|'||ra||'|'||hn||'|'||ha||'|'||nn||'|'||na r FROM "
+       f"(SELECT ym, cid, pt, COUNT(*) ln, ROUND(SUM(g),2) g, ROUND(SUM(d),2) d, ROUND(SUM(net),2) nt, SUM(rf) rn, ROUND(SUM(CASE WHEN rf=1 THEN net ELSE 0 END),2) ra, "
+       f"SUM(CASE WHEN rf=0 AND pt='Cash' AND g>=200 AND d>=0.3*g THEN 1 ELSE 0 END) hn, ROUND(SUM(CASE WHEN rf=0 AND pt='Cash' AND g>=200 AND d>=0.3*g THEN d ELSE 0 END),2) ha, "
+       f"SUM(CASE WHEN hh<6 THEN 1 ELSE 0 END) nn, ROUND(SUM(CASE WHEN hh<6 THEN net ELSE 0 END),2) na FROM ({b}) GROUP BY ym, cid, pt)) GROUP BY bkt")
+if kind=='vis':
+    b=base(f"TO_CHAR(M.PATIENT_INVOICE_DATE,'YYMM') ym, {PT} pt, M.DOCTOR_ID did, {SP} sp, {PH} ph, M.PATIENT_FILE_NO||'-'||M.EPISODE_NO ep, {NET} net",
+           f"TO_CHAR(R.REFUND_INVOICE_DATE,'YYMM'), {PT}, M.DOCTOR_ID, {SP}, {PH}, M.PATIENT_FILE_NO||'-'||M.EPISODE_NO, -{NET}")
+    q=(f"SELECT bkt, COUNT(*) n, LISTAGG(r,'~') WITHIN GROUP (ORDER BY r) r FROM (SELECT MOD(ROWNUM,{B}) bkt, ym||'|'||pt||'|'||did||'|'||sp||'|'||eps||'|'||n1||'|'||n2 r FROM "
+       f"(SELECT ym, pt, did, sp, COUNT(DISTINCT CASE WHEN net>0 THEN ep END) eps, ROUND(SUM(net),2) n1, ROUND(SUM(CASE WHEN ph='N' THEN net ELSE 0 END),2) n2 FROM ({b}) GROUP BY ym, pt, did, sp)) GROUP BY bkt")
+print(q)

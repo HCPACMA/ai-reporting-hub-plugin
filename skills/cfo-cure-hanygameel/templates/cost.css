@@ -1,0 +1,32 @@
+/* ===== Costing section ===== */
+.cst-sec{direction:rtl}
+.cst-sec .ps{direction:ltr;text-align:left}
+.cst-sec .section-head p,.cst-sec .note{text-align:right;line-height:1.85}
+.cst-sec .aud-t th,.cst-sec .aud-t td{text-align:right}
+.cst-sec .aud-t th.n,.cst-sec .aud-t td.n{text-align:left;direction:ltr}
+.cst-sec .kpi .value{direction:ltr;text-align:right;unicode-bidi:isolate}
+.cst-sec .kpi .label,.cst-sec .kpi .delta{text-align:right}
+.cst-sec .an-svg text{direction:ltr}
+.cst-sec code{direction:ltr;display:inline-block}
+.cst-bar{flex-wrap:wrap}
+.cst-t td,.cst-t th{white-space:nowrap}
+.cst-t .mono{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-muted)}
+.cst-r{cursor:pointer}
+.cst-r:hover{background:var(--surface-2)}
+.cst-r2{cursor:pointer}
+.cst-r2:hover{background:var(--surface-2)}
+.cst-r2.on{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--accent)}
+.cst-d>td{padding:0 0 12px 0!important;background:var(--surface-2)}
+.cst-in{margin:0;font-size:12.5px}
+.cst-in th{font-size:11px;color:var(--ink-faint)}
+.cst-sub{color:var(--ink-faint);font-size:11px}
+.warnc{color:var(--warn,#b07100)}
+.cst-th{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cst-gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:10px}
+.cst-gap{border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:var(--surface-2)}
+.cst-gn{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;line-height:1.1}
+.cst-gt{font-size:13px;margin-top:2px}
+.cst-gs{font-size:11.5px;color:var(--ink-faint);margin-top:6px;line-height:1.5;word-break:break-word;white-space:normal}
+.cst-bar-r{fill:var(--accent);opacity:.30}
+.cst-bar-c{fill:var(--accent);opacity:.85}
+.cst-gm{fill:none;stroke:var(--ink);stroke-width:1.8;stroke-dasharray:3 3}

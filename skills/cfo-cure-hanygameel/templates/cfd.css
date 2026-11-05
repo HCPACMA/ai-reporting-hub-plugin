@@ -1,0 +1,11 @@
+/* ===== Cash flow · direct method ===== */
+.cfd-bar{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.cfd-ctl{display:flex;gap:8px;align-items:center}
+.cfd-ctl select{font:inherit;font-size:12.5px;padding:6px 9px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)}
+.cfd-row{cursor:pointer}
+.cfd-row:hover td{background:var(--accent-soft)}
+.cfd-row.pin td{background:var(--accent-soft)}
+.cfd-row.pin td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.cfd-t td.n{min-width:92px}
+.cfd-nc td.ar{white-space:normal;min-width:260px;max-width:420px;font-size:12px}
+.cfd-nc td:nth-child(3){white-space:normal;min-width:220px}

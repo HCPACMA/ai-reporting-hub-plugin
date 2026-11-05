@@ -1,0 +1,2 @@
+-- Age in decades. Columns: age_b, n. Staff with no birth date are excluded here and counted as the gap to active staff.
+SELECT TRUNC(MONTHS_BETWEEN(DATE '{ASOF}', m.DATE_OF_BIRTH)/120)*10 AGE_B, COUNT(*) N FROM {P}PS_STAFF_CONTRACT c JOIN {P}STAFF_MASTER m ON m.STAFF_ID=c.STAFF_ID WHERE c.STATUS='A' AND c.CURRENT_CONTRACT='Y' AND m.DATE_OF_BIRTH IS NOT NULL GROUP BY TRUNC(MONTHS_BETWEEN(DATE '{ASOF}', m.DATE_OF_BIRTH)/120)*10 ORDER BY 1

@@ -1,0 +1,16 @@
+{
+ "_comment": "Arabic names for labels that come from Cure data (job names, items, bands). A label missing here is shown as it is. Add your own at a new company.",
+ "HQ and administration": "الإدارة العامة والمقر", "Riyadh clinic": "مجمع الرياض", "BUR1": "بريدة 1", "BUR2": "بريدة 2", "Rafha": "رفحاء",
+ "Administrative": "إداري", "Midwife": "قابلة", "Reception": "استقبال", "Worker": "عامل", "Nurse": "ممرض/ة", "X-ray technician": "فني أشعة",
+ "Laboratory technician": "فني مختبر", "General doctor": "طبيب عام", "Dental": "أسنان", "Private duty nurse": "ممرض/ة خاص", "Internist": "باطنة",
+ "Medical insurance secretary": "سكرتير تأمين طبي",
+ "Under 20": "أقل من 20", "20 to 29": "20 – 29", "30 to 39": "30 – 39", "40 to 49": "40 – 49", "50 to 59": "50 – 59", "60 and over": "60 فأكثر", "Birth date missing": "تاريخ الميلاد ناقص",
+ "Under 1 year": "أقل من سنة", "1 to 2 years": "1 – 2 سنة", "2 to 3 years": "2 – 3 سنوات", "3 to 5 years": "3 – 5 سنوات", "5 to 8 years": "5 – 8 سنوات", "8 to 10 years": "8 – 10 سنوات", "10 to 15 years": "10 – 15 سنة", "15 years and over": "15 سنة فأكثر",
+ "Others allowance": "بدلات أخرى", "Percentage of doctors": "نسبة الأطباء", "Housing allowance": "بدل سكن", "Instead of Friday": "بدل الجمعة", "Food allowance": "بدل طعام", "Lump-sum allowance": "بدل مقطوع", "One-time accruals": "استحقاقات لمرة واحدة", "Transportation": "مواصلات",
+ "Other deductions": "خصومات أخرى", "Loans": "سلف وقروض", "Shortage": "عجز", "Salary bank fees": "رسوم بنكية للرواتب",
+ "Professional licence ID": "رقم الترخيص المهني", "Probation days": "أيام فترة التجربة", "Service start date (master)": "تاريخ بدء الخدمة (الملف الرئيسي)", "GOSI date": "تاريخ التأمينات", "Email": "البريد الإلكتروني", "Birth date": "تاريخ الميلاد", "ID record": "سجل الهوية", "Nationality": "الجنسية", "Salary record": "سجل الراتب",
+ "Valid beyond 6 months": "سارية لأكثر من 6 أشهر", "Expired": "منتهية", "No expiry date": "بلا تاريخ انتهاء", "Expiring within 6 months": "تنتهي خلال 6 أشهر",
+ "Active staff": "على رأس العمل", "Leavers": "من تركوا العمل", "Paid (P)": "مسدد (P)", "Rescheduled (R)": "معاد جدولته (R)", "Pending (N)": "معلّق (N)",
+ "Posted": "مرحّل", "Cancelled": "ملغى", "Open": "مفتوح",
+ "Type 17": "نوع 17", "Type 09": "نوع 09"
+}

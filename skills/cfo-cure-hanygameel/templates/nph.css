@@ -1,0 +1,51 @@
+/* ===== NPHIES payment section ===== */
+[hidden]{display:none!important;}
+.nph-find{display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:18px; align-items:start;}
+@media (max-width:900px){ .nph-find{grid-template-columns:1fr;} }
+.nph-find .box{display:flex; flex-direction:column; gap:8px;}
+.nph-find label{font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+.nph-find input[type=number]{font:inherit; font-size:20px; font-variant-numeric:tabular-nums; padding:9px 12px; border:1.5px solid var(--accent-line); border-radius:10px; background:var(--surface); color:var(--ink); width:100%; box-sizing:border-box;}
+.nph-find input[type=number]:focus{outline:2px solid var(--accent); outline-offset:1px;}
+.nph-find .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.nph-find select{font:inherit; font-size:12.5px; padding:6px 9px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--ink);}
+.nph-find .hint{font-size:11.5px; color:var(--ink-muted); line-height:1.5;}
+.nph-res .hit{border:1px solid var(--border); border-radius:10px; padding:10px 13px; margin-bottom:8px; background:var(--surface);}
+.nph-res .hit.best{border-color:var(--accent-line); background:var(--accent-soft);}
+.nph-res .hit .h{display:flex; justify-content:space-between; gap:10px; align-items:baseline; flex-wrap:wrap;}
+.nph-res .hit .who{font-weight:700; font-size:13.5px; color:var(--ink);}
+.nph-res .hit .amt{font-variant-numeric:tabular-nums; font-weight:700;}
+.nph-res .hit .m{font-size:12px; color:var(--ink-muted); line-height:1.55; margin-top:3px;}
+.nph-res .hit .ar{direction:rtl; unicode-bidi:isolate; font-family:"IBM Plex Sans","Segoe UI",Tahoma,sans-serif;}
+.nph-res .none{font-size:12.5px; color:var(--ink-muted); padding:8px 0;}
+.nph-t td .sm{display:block; font-size:10.5px; color:var(--ink-faint);}
+.nph-t td.ar{max-width:220px;}
+.nph-t .d-neg{color:var(--critical);} .nph-t .d-pos{color:var(--warning);}
+.nph-seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+.nph-seg button{font:inherit; font-size:12px; border:0; background:var(--surface); color:var(--ink-muted); padding:6px 11px; cursor:pointer;}
+.nph-seg button.on{background:var(--accent); color:var(--surface);}
+.nph-work{display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,380px); gap:16px; align-items:start;}
+@media (max-width:1100px){ .nph-work{grid-template-columns:1fr;} }
+.nph-panel{position:sticky; top:12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-2); padding:12px 14px; font-size:12px; max-height:720px; overflow:auto;}
+.nph-panel h4{margin:10px 0 6px; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; display:flex; gap:6px; align-items:center; flex-wrap:wrap;}
+.nph-panel h4:first-child{margin-top:0; font-size:12px; letter-spacing:.02em; text-transform:none; color:var(--ink);}
+.nph-panel dl{display:grid; grid-template-columns:max-content 1fr; gap:3px 10px; margin:0;}
+.nph-panel dt{color:var(--ink-faint);} .nph-panel dd{margin:0; color:var(--ink); overflow-wrap:anywhere;}
+.nph-panel .doc{border-top:1px dashed var(--border); padding:5px 0; color:var(--ink-muted); line-height:1.5;}
+.nph-panel .sm{display:block; color:var(--ink-faint); line-height:1.5;}
+.nph-panel .aud-t{font-size:11.5px;}
+.nph-row{cursor:pointer;}
+.nph-row:hover td{background:var(--accent-soft);}
+.nph-row.pin td{background:var(--accent-soft); box-shadow:inset 0 -1px 0 var(--accent-line);}
+.nph-row.pin td:first-child{box-shadow:inset 3px 0 0 var(--accent);}
+.nph-chips{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px;}
+.nph-chips button{font:inherit; font-size:12px; border:1px solid var(--border); background:var(--surface); color:var(--ink-muted); border-radius:99px; padding:4px 11px; cursor:pointer;}
+.nph-chips button b{color:var(--ink); margin-left:3px;}
+.nph-chips button.c-bad{border-color:var(--critical-soft);} .nph-chips button.c-bad b{color:var(--critical);}
+.nph-chips button.c-warn b{color:var(--warning);} .nph-chips button.c-ok b{color:var(--good);}
+.nph-chips button.on{background:var(--accent-soft); border-color:var(--accent); color:var(--ink);}
+.nph-t .d-neg,.nph-panel .d-neg{color:var(--critical);} .nph-panel .d-pos{color:var(--warning);}
+.nph-t td.nw{white-space:nowrap;}
+.nph-t td.py{min-width:170px;}
+.nph-t td.ar{max-width:170px;}
+.nph-panel .aud-t td,.nph-panel .aud-t th{white-space:nowrap;}
+.nph-work{grid-template-columns:minmax(0,1fr) minmax(280px,340px);}

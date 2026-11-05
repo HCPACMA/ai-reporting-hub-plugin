@@ -1,0 +1,27 @@
+/* ===== IFRS 18 statement of profit or loss ===== */
+.i18-t{direction:rtl}
+.i18-t th,.i18-t td{text-align:right}
+.i18-t th.n,.i18-t td.n{text-align:left;direction:ltr;font-variant-numeric:tabular-nums}
+.i18-t td:first-child{padding-left:24px}
+.i18-en{display:block;font-size:10.5px;color:var(--ink-faint);direction:ltr;text-align:right;margin-top:1px}
+.i18-ref{font-style:normal;opacity:.75}
+.i18-cat td{background:var(--surface-2);font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--ink-muted);padding-top:9px;padding-bottom:9px}
+.i18-cat .i18-en{color:var(--ink-faint);font-weight:400;letter-spacing:0}
+.i18-sub td{border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);font-size:13.5px;background:var(--accent-soft)}
+.i18-nil td{color:var(--ink-faint)}
+.i18-detail td{font-size:11.5px;color:var(--ink-muted)}
+.i18-detail td:first-child{padding-right:14px}
+.i18-note2{font-size:11px;color:var(--ink-faint);line-height:1.4}
+.i18-none{color:var(--ink-faint);font-size:12px;padding:10px 0!important}
+
+/* findings list */
+.i18-flist{display:flex;flex-direction:column;gap:10px;margin-top:6px;direction:rtl}
+.i18-f{border:1px solid var(--border);border-radius:8px;padding:11px 13px;background:var(--surface-2)}
+.i18-f-fix{border-right:3px solid var(--good,#2e7d63)}
+.i18-f-cls{border-right:3px solid var(--accent)}
+.i18-f-flag{border-right:3px solid var(--warn,#b8860b)}
+.i18-fh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.i18-fh b{font-size:13px}
+.i18-fb{font-size:10px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:99px;background:var(--surface);border:1px solid var(--border);color:var(--ink-muted);white-space:nowrap}
+.i18-fv{margin-inline-start:auto;direction:ltr;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700}
+.i18-fd{font-size:12px;line-height:1.65;color:var(--ink-muted);margin-top:5px}

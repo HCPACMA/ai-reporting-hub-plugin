@@ -1,0 +1,19 @@
+/* ===== Cash flow audit ===== */
+.cfa-t td,.cfa-t th{white-space:nowrap}
+.cfa-t td:first-child,.cfa-t th:first-child{white-space:normal;min-width:210px}
+.cfa-ar{display:block;font-size:10.5px;color:var(--ink-faint);direction:rtl;text-align:left;margin-top:1px}
+.cfa-ar2{font-size:10.5px;color:var(--ink-faint);direction:rtl}
+.cfa-h td{background:var(--surface-2);font-size:11px;font-weight:700;letter-spacing:.04em;padding-top:10px;padding-bottom:8px}
+.cfa-s td{font-size:10.5px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;padding-top:10px}
+.cfa-sub td{border-top:1px solid var(--border);font-weight:700;background:var(--surface-2)}
+.cfa-tot td{border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);font-weight:700;background:var(--accent-soft)}
+.cfa-fix td{background:var(--warning-soft)}
+.cfa-new{display:inline-block;font-size:10px;font-weight:700;color:var(--warning);margin-inline-start:8px;vertical-align:middle}
+.cfa-st td:first-child{padding-left:0}
+.cfa-aud th.sm,.cfa-aud td.sm{font-size:11.5px;padding-left:6px;padding-right:6px}
+.cfa-aud thead tr:first-child th{border-bottom:none}
+.cfa-bad{background:var(--critical-soft);color:var(--critical);font-weight:700}
+.cfa-find{margin:6px 0 0;padding-inline-start:20px;font-size:13px;line-height:1.75;color:var(--ink-muted)}
+.cfa-find li{margin-bottom:9px}
+.cfa-find b{color:var(--ink)}
+.cfa-dax{background:var(--surface-2);border-radius:8px;padding:11px 13px;margin:9px 0 0;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.65;overflow-x:auto;white-space:pre;color:var(--ink)}

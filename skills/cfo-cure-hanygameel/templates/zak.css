@@ -1,0 +1,48 @@
+/* ===== Zakat section ===== */
+.zk-sec .section-head p,.zk-sec .zk-note{line-height:1.85;}
+.zk-sec .ps{direction:ltr; text-align:left;}
+.zk-top{display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; margin:0 0 16px;}
+.zk-seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+.zk-seg button{appearance:none; border:0; border-inline-end:1px solid var(--border); background:var(--surface); color:var(--ink-muted); font:inherit; font-size:12.5px; font-weight:600; padding:7px 13px; cursor:pointer;}
+.zk-seg button:last-child{border-inline-end:0;}
+.zk-seg button.on{background:var(--accent-soft); color:var(--accent);}
+.zk-tabs{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 16px;}
+.zk-tabs button{appearance:none; font:inherit; font-size:13px; font-weight:600; padding:8px 14px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--ink-muted); cursor:pointer;}
+.zk-tabs button.on{background:var(--accent); border-color:var(--accent); color:var(--surface);}
+.zk-seg button:focus-visible,.zk-tabs button:focus-visible,.zk-sec summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.zk-kpi{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:0 0 16px;}
+.zk-kpi>div{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:13px 15px; display:flex; flex-direction:column; gap:5px;}
+.zk-kpi span{font-size:11.5px; color:var(--ink-faint); font-weight:600;}
+.zk-kpi b{font-size:21px; font-variant-numeric:tabular-nums; direction:ltr; text-align:right;}
+.zk-kpi em{font-style:normal; font-size:11.5px; color:var(--ink-muted); line-height:1.5;}
+.zk-kpi .pill{align-self:flex-start;}
+@media (max-width:900px){ .zk-kpi{grid-template-columns:1fr 1fr;} }
+.zk-t{width:100%; border-collapse:collapse; font-size:13px;}
+.zk-t th{font-size:11px; color:var(--ink-faint); font-weight:600; text-align:right; padding:7px 10px; border-bottom:1.5px solid var(--border); white-space:nowrap;}
+.zk-t td{padding:7px 10px; border-bottom:1px solid var(--border); text-align:right; vertical-align:top;}
+.zk-t td.n,.zk-t th.n{direction:ltr; text-align:left; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.zk-t td.art{font-size:11.5px; color:var(--ink-faint); white-space:nowrap;}
+.zk-t td.acc{font-size:11.5px; color:var(--ink-faint); direction:ltr; text-align:right; font-variant-numeric:tabular-nums;}
+.zk-t tr.sub td{background:var(--surface-2); font-size:11.5px; font-weight:700; color:var(--ink-muted); padding-top:6px; padding-bottom:6px;}
+.zk-t tr.tot td{font-weight:700; border-top:1.5px solid var(--border);}
+.zk-t tr.res td{font-weight:700; font-size:14.5px; background:var(--accent-soft);}
+.zk-t tr.muted td{color:var(--ink-faint);}
+.zk-t tr.ind td:first-child{padding-inline-start:26px;}
+.zk-t tbody tr:hover{background:var(--surface-2);}
+.zk-x{overflow-x:auto;}
+.zk-2{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:16px; align-items:start;}
+@media (max-width:1100px){ .zk-2{grid-template-columns:1fr;} }
+.zk-note{font-size:12.5px; color:var(--ink-muted); margin-top:12px;}
+.zk-warn{margin:0 0 14px; padding:9px 12px; border-radius:10px; background:var(--warning-soft); border:1px solid var(--warning); color:var(--ink); font-size:12.5px; line-height:1.7;}
+.zk-sec details{margin-top:10px;}
+.zk-sec summary{cursor:pointer; font-size:12.5px; font-weight:600; color:var(--accent);}
+.zk-wf{width:100%; overflow-x:auto; direction:ltr;}
+.zk-wf svg{display:block; width:100%; height:auto;}
+.zk-wf text{font-family:"IBM Plex Sans","Segoe UI",Tahoma,sans-serif; fill:var(--ink-muted);}
+.zk-wf .lbl{fill:var(--ink); font-size:12.5px;}
+.zk-wf .val{fill:var(--ink); font-size:12px; font-variant-numeric:tabular-nums;}
+.zk-wf .b-tot{fill:var(--dv-tot, #7C8E89);} .zk-wf .b-up{fill:var(--dv-unf, #C9502A);} .zk-wf .b-dn{fill:var(--dv-fav, #1A7FA8);}
+.zk-wf .conn{stroke:var(--ink-faint); stroke-dasharray:2 2;}
+.zk-lg{display:flex; flex-wrap:wrap; gap:14px; font-size:12px; color:var(--ink-muted); margin-top:6px;}
+.zk-lg i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-inline-end:6px; vertical-align:-2px;}
+.zk-art{font-size:11px; font-weight:700; color:var(--accent); background:var(--accent-soft); border-radius:99px; padding:1px 8px; white-space:nowrap;}

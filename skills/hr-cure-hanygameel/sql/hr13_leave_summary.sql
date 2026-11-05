@@ -1,0 +1,3 @@
+-- Leave records by type, status and year from {FROM_DATE}. Columns: vt, pf, y, n, days
+-- POST_FLAG: P posted, C cancelled, O open. Decisions go on PRBTCTRX (PR_STAFF_ADDING), leave on PS_STAFF_VACATIONS; never both.
+SELECT VACATION_TYPE VT, POST_FLAG PF, TO_CHAR(DATE_FROM,'YYYY') Y, COUNT(*) N, SUM(VACATION_NO_OF_DAY) DAYS FROM {P}PS_STAFF_VACATIONS WHERE DATE_FROM>=DATE '{FROM_DATE}' GROUP BY VACATION_TYPE, POST_FLAG, TO_CHAR(DATE_FROM,'YYYY') ORDER BY 3,1,2

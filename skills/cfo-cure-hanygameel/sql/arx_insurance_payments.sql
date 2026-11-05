@@ -1,0 +1,19 @@
+-- AR Audit · insurance payments (1240007). Run per branch with branch='ALL' (Riyadh needs EXSYS. prefix when run alone).
+-- 1) every line of every voucher that touches 1240007, created (or dated) in the review month; big month-end JVs (>=10 lines) left out
+SELECT 'ARX~'||d.VOUCHER_NO||'~'||TO_CHAR(d.VM_DATE,'YYYY-MM-DD')||'~'||d.STATUS||'~'||d.SUB_SYSTEM_CODE||'~'||d.ACCOUNT_NO||'~'||d.SUB_ACCOUNT_NO||'~'||
+       REPLACE(d.SUB_ACCOUNT_ARB_NAME,'~','-')||'~'||d.DR_AMOUNT||'~'||d.CR_AMOUNT||'~'||REPLACE(REPLACE(REPLACE(d.DESCRIPTION,'~','-'),CHR(10),' '),CHR(13),' ')||'~'||d.ENTRY_USER||'~'||d.ENTRY_NAME X
+FROM GL_TRANSACTIONS_DETAILS d
+WHERE d.STATUS<>'C' AND d.VOUCHER_NO IN (
+  SELECT v.VOUCHER_NO FROM GL_TRANSACTIONS_VIEW v
+  WHERE v.ACCOUNT_NO='1240007' AND v.STATUS<>'C' AND v.VM_DATE >= DATE '2026-01-01'
+    AND (v.CREATION_DATE >= DATE '{M0}' AND v.CREATION_DATE < DATE '{M1}' OR v.VM_DATE >= DATE '{M0}' AND v.VM_DATE < DATE '{M1}')
+  GROUP BY v.VOUCHER_NO HAVING COUNT(*) < 10)
+ORDER BY d.VOUCHER_NO, d.DR_AMOUNT DESC;
+-- 2) creation / posting dates
+SELECT VOUCHER_NO, TO_CHAR(MIN(VM_DATE),'YYYY-MM-DD') DT, TO_CHAR(MIN(CREATION_DATE),'YYYY-MM-DD') CD, TO_CHAR(MIN(POSTING_DATE),'YYYY-MM-DD') PD, MIN(STATUS) ST, COUNT(*) N
+FROM GL_TRANSACTIONS_VIEW WHERE ACCOUNT_NO='1240007' AND STATUS<>'C' AND (CREATION_DATE >= DATE '{M0}' OR VM_DATE >= DATE '{M0}') AND VM_DATE >= DATE '2026-01-01'
+GROUP BY VOUCHER_NO ORDER BY 1;
+-- 3) attachments (no CREATE% column names: the MCP guard rejects the word)
+SELECT 'ATT~'||a.RELATED_DOCUMENT||'~'||a.TRANSACTION_TYPE||'~'||a.IMAGE_FILE_NAME||'~'||a.DESCRIPTION||'~'||TO_CHAR(a.ATTACHED_DATE,'YYYY-MM-DD')||'~'||a.IMAGE_ID X
+FROM EX_ATTACHMENTS a WHERE a.TRANSACTION_TYPE IN ('CM','GL') AND a.RELATED_DOCUMENT IN (<vouchers from 1>) ORDER BY a.RELATED_DOCUMENT, a.IMAGE_ID;
+-- File servers (mapped drives on the finance PC): Riyadh X:\VOUCHERS_DOCUMENTS\CM\ (GL\ for JVs) · BUR1 U:\VOUCHERS_DOCUMENTS\ · BUR2 T:\VOUCHERS_DOCUMENTS\ · Rafha Q:\VOUCHERS_DOCUMENTS\

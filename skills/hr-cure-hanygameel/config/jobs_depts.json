@@ -1,0 +1,19 @@
+{
+ "branches": {"00":["HQ","المركز الرئيسي"],"01":["Riyadh","الرياض"],"02":["BUR1","بريدة 1"],"03":["BUR2","بريدة 2"],"04":["Rafha","رفحاء"]},
+ "admin_org_branch": {"001":"01","002":"02","003":"03","004":"04","000":"00"},
+ "doctor_jobs": ["098","101","15","150","152","153","154","155","156","157","158","159","160","162","170","171","173","174","192","53","61"],
+ "nurse_jobs": ["102","N","223"],
+ "no_nurse_ok_jobs": {"157":["Radiology doctors work in the radiology department","أطباء الأشعة يعملون في قسم الأشعة"],"158":["Laboratory doctors work in the lab","أطباء المختبر يعملون في المختبر"],"101":["Administrative doctor has no clinic","طبيب إداري بلا عيادة"]},
+ "max_nurses_per_doctor": 2,
+ "jobs": {
+  "098":["General Doctor","طبيب عام"],"101":["Administrative Doctor","طبيب إداري"],"15":["GP","طبيب عام"],"150":["ENT Specialist","أخصائي أنف وأذن وحنجرة"],"152":["Resident Pediatrician","طبيب أطفال مقيم"],"153":["Ophthalmology","طبيب عيون"],"154":["Obstetrics and Gynaecology","نساء وولادة"],"155":["Orthopedic","عظام"],"156":["Urology","مسالك بولية"],"157":["Radiology","أشعة"],"158":["Laboratory","مختبر (طبيب)"],"159":["Internist","باطنة"],"160":["Dialysis","غسيل كلى"],"162":["Dental","أسنان"],"170":["Skin Specialist","جلدية"],"171":["Child Specialist","أخصائي أطفال"],"173":["Specialist Internist","أخصائي باطنة"],"174":["Resident gynecologist","نساء وولادة مقيم"],"192":["Urology resident doctor","مقيم مسالك بولية"],"53":["Eye doctor","طبيب عيون"],"61":["Orthopedic specialist","أخصائي عظام"],
+  "102":["Midwife (nursing)","قابلة / تمريض"],"N":["Nurse","ممرضة"],"223":["Private Duty Nurse","ممرضة خاصة"],
+  "3221":["X-ray technician","فني أشعة"],"1":["Laboratory Technician","فني مختبر"],"099":["Laboratory Specialist","أخصائي مختبر"],"3":["Reception","استقبال"],"116":["Administrative","إداري"],"123":["Worker","عامل"],"8":["Driver","سائق"],"113":["Driver","سائق"],"S":["Medical Insurance Secretary","سكرتير تأمين طبي"],"39":["Secretariat","سكرتارية"],"70":["Customer Service Coordinator","منسق خدمة العملاء"],"26":["Marketing","تسويق"],"22":["Insurance/ER","تأمين / طوارئ"],"56":["Warehouse department","قسم المستودعات"],"46":["Warehouse","مستودع"],"59":["IT","تقنية المعلومات"],"62":["Corporate administrator","إداري شركات"],"072":["Administrative secretary","سكرتير إداري"],"073":["Financial manager","مدير مالي"],"074":["Treasurer","أمين صندوق"],"075":["Public Accountant","محاسب"],"078":["Administrator","إداري"],"118":["Pharmacist","صيدلي"],"200":["Staff","موظف"],"GM":["General Director","المدير العام"],"EXM":["Executive Manager","المدير التنفيذي"]
+ },
+ "depts": {
+  "02101":["Outpatient Reception","استقبال العيادات"],"02102":["Child Clinics","عيادات الأطفال"],"02103":["General Doctor","الطبيب العام"],"02104":["Dermatology","الجلدية"],"02106":["Gynecology and Obstetrics","النساء والولادة"],"02107":["ENT","أنف وأذن وحنجرة"],"02109":["Dialysis","الغسيل الكلوي"],"02110":["Home Care","الرعاية المنزلية"],"02111":["Physical Therapy","العلاج الطبيعي"],"02113":["Ophthalmology","العيون"],"02115":["Orthopedic","العظام"],"02118":["Chest","الصدر"],"02121":["Internal Medicine","الباطنة"],"02122":["Dental","الأسنان"],"02123":["Urinary Tract","المسالك البولية"],"02124":["Laser","الليزر"],"02125":["Surgery","الجراحة"],"02126":["Neurology","المخ والأعصاب"],"02301":["Laboratory","المختبر"],"02302":["Central Lab","المختبر المركزي"],"02401":["Radiology","الأشعة"],"02501":["Emergency","الطوارئ"],"02502":["Accident and Emergency","الحوادث والطوارئ"],"02601":["Pharmacy","الصيدلية"],"02602":["Pharmacy 2","الصيدلية 2"],"02901":["Vaccination","التطعيمات"]
+ },
+ "special_depts": {
+  "0100":["Insurance section","قسم التأمين"],"0113":["Purchase and Stores","المشتريات والمخازن"],"admin":["Administration expenses","المصاريف الإدارية"],"hq":["Head office / owner","المركز الرئيسي / المالك"]
+ }
+}

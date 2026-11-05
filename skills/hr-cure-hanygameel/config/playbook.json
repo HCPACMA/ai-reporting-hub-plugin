@@ -1,0 +1,296 @@
+{
+ "calendar": [
+  [
+   {
+    "en": "Oct 2026",
+    "ar": "أكتوبر 2026"
+   },
+   [
+    {
+     "en": "Close October payroll and post all rows",
+     "ar": "إقفال رواتب أكتوبر وترحيل كل الصفوف"
+    },
+    {
+     "en": "Review contracts approaching their end date",
+     "ar": "مراجعة العقود القريبة من الانتهاء"
+    },
+    {
+     "en": "Clear unposted rows from closed months",
+     "ar": "تصفية الصفوف غير المرحّلة من الشهور المقفلة"
+    },
+    {
+     "en": "Carry the open payroll notes into November",
+     "ar": "ترحيل ملاحظات الرواتب المفتوحة إلى نوفمبر"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Nov 2026",
+    "ar": "نوفمبر 2026"
+   },
+   [
+    {
+     "en": "Renew expired identity documents",
+     "ar": "تجديد وثائق الهوية المنتهية"
+    },
+    {
+     "en": "Run the Nitaqat check",
+     "ar": "فحص نطاقات"
+    },
+    {
+     "en": "Settle leaver loans",
+     "ar": "تسوية سلف من تركوا العمل"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Dec 2026",
+    "ar": "ديسمبر 2026"
+   },
+   [
+    {
+     "en": "Year-end leave liability count",
+     "ar": "جرد التزام الإجازات في نهاية العام"
+    },
+    {
+     "en": "Reconcile end-of-service provision",
+     "ar": "مطابقة مخصص نهاية الخدمة"
+    },
+    {
+     "en": "Approve next-year headcount budget",
+     "ar": "اعتماد ميزانية العمالة للعام القادم"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Jan to Mar 2027",
+    "ar": "يناير – مارس 2027"
+   },
+   [
+    {
+     "en": "Renew contracts ending in the quarter",
+     "ar": "تجديد العقود المنتهية في الربع"
+    },
+    {
+     "en": "Annual appraisal cycle",
+     "ar": "دورة التقييم السنوي"
+    },
+    {
+     "en": "Probation reviews for recent hires",
+     "ar": "مراجعة فترة التجربة للمعيّنين حديثًا"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Apr to Jun 2027",
+    "ar": "أبريل – يونيو 2027"
+   },
+   [
+    {
+     "en": "Renew contracts ending in the quarter",
+     "ar": "تجديد العقود المنتهية في الربع"
+    },
+    {
+     "en": "Summer leave and absence plan",
+     "ar": "خطة الإجازات والغياب الصيفية"
+    },
+    {
+     "en": "Mid-year turnover review",
+     "ar": "مراجعة الدوران منتصف العام"
+    }
+   ]
+  ]
+ ],
+ "checklist": [
+  {
+   "en": "New hire: contract start equals letter date, nationality, ID type, IBAN and bank, salary record, day-31 item",
+   "ar": "تعيين جديد: بداية العقد = تاريخ الخطاب، الجنسية، نوع الهوية، IBAN والبنك، سجل الراتب، بند يوم 31"
+  },
+  {
+   "en": "Filipino staff: loan record in place before the work-start letter is processed",
+   "ar": "الفلبينيون: سجل القرض موجود قبل معالجة خطاب بداية العمل"
+  },
+  {
+   "en": "Decisions entered on the additions screen, leave entered on the vacation screen, never both",
+   "ar": "القرارات تُدخل في شاشة الإضافة والخصم، والإجازات في شاشة الإجازات، وليس الاثنين معًا"
+  },
+  {
+   "en": "Leave crossing month-end has a return date before the payroll run",
+   "ar": "الإجازة العابرة لنهاية الشهر لها تاريخ عودة قبل تشغيل المسير"
+  },
+  {
+   "en": "Retro raise differences accrued and paid through the staff sub-account",
+   "ar": "فروق العلاوات بأثر رجعي تُستحق وتُسدد عبر الحساب الفرعي للموظف"
+  },
+  {
+   "en": "Leaver: final settlement, loan clearing and end-of-service checked against the staff GL account",
+   "ar": "من ترك العمل: التسوية النهائية وتصفية القرض ونهاية الخدمة تُراجع مع حساب الموظف في الأستاذ"
+  },
+  {
+   "en": "Monthly: unposted payroll rows equal zero in closed months",
+   "ar": "شهريًا: صفوف الرواتب غير المرحّلة = صفر في الشهور المقفلة"
+  },
+  {
+   "en": "Monthly: expired contracts and identity documents equal zero",
+   "ar": "شهريًا: العقود ووثائق الهوية المنتهية = صفر"
+  },
+  {
+   "en": "Monthly: payroll notes reviewed, open items carried to the new month",
+   "ar": "شهريًا: مراجعة ملاحظات الرواتب وترحيل المفتوح للشهر الجديد"
+  },
+  {
+   "en": "Quarterly: master data completeness review by branch",
+   "ar": "ربع سنويًا: مراجعة اكتمال البيانات الرئيسية حسب الفرع"
+  },
+  {
+   "en": "Year-end: leave and end-of-service provisions reconciled to the HR system",
+   "ar": "نهاية العام: مطابقة مخصصي الإجازات ونهاية الخدمة مع نظام الموارد البشرية"
+  }
+ ],
+ "practice": [
+  [
+   {
+    "en": "Hire to retire controls",
+    "ar": "ضوابط من التعيين إلى نهاية الخدمة"
+   },
+   [
+    {
+     "en": "One checklist per hire and per leaver, signed by HR and accounting",
+     "ar": "قائمة فحص لكل تعيين ولكل مغادر، موقّعة من HR والحسابات"
+    },
+    {
+     "en": "Salary, bank and GOSI set before the first payroll",
+     "ar": "الراتب والبنك والتأمينات قبل أول مسير"
+    },
+    {
+     "en": "Final settlement reconciled to the staff GL account",
+     "ar": "التسوية النهائية مطابقة مع حساب الموظف في الأستاذ"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Payroll integrity",
+    "ar": "سلامة الرواتب"
+   },
+   [
+    {
+     "en": "Lock closed months",
+     "ar": "قفل الشهور المقفلة"
+    },
+    {
+     "en": "Variance review of every item above 10 percent against last month",
+     "ar": "مراجعة كل بند يتغير أكثر من 10% عن الشهر الماضي"
+    },
+    {
+     "en": "Segregate entry, approval and posting",
+     "ar": "فصل الإدخال عن الاعتماد والترحيل"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Compliance calendar",
+    "ar": "تقويم الالتزام"
+   },
+   [
+    {
+     "en": "Track contract, ID, licence and insurance dates in one list",
+     "ar": "متابعة تواريخ العقود والهويات والتراخيص والتأمين في قائمة واحدة"
+    },
+    {
+     "en": "Alert at 90, 60 and 30 days",
+     "ar": "تنبيه قبل 90 و60 و30 يومًا"
+    },
+    {
+     "en": "Report expired items to the HR manager weekly",
+     "ar": "رفع المنتهي لمدير الموارد البشرية أسبوعيًا"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Leave and provisions",
+    "ar": "الإجازات والمخصصات"
+   },
+   [
+    {
+     "en": "Post leave the same week",
+     "ar": "ترحيل الإجازة في نفس الأسبوع"
+    },
+    {
+     "en": "Count unused leave each quarter",
+     "ar": "جرد الإجازات غير المستخدمة كل ربع"
+    },
+    {
+     "en": "Fund end-of-service on a schedule",
+     "ar": "تمويل نهاية الخدمة وفق جدول"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "People analytics",
+    "ar": "تحليلات الموارد البشرية"
+   },
+   [
+    {
+     "en": "Report turnover by branch, role and tenure",
+     "ar": "تقرير الدوران حسب الفرع والوظيفة والخدمة"
+    },
+    {
+     "en": "Track hiring time and first-year exits",
+     "ar": "متابعة زمن التعيين والخروج في السنة الأولى"
+    },
+    {
+     "en": "Monitor overtime against budget",
+     "ar": "متابعة العمل الإضافي مقابل الميزانية"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Data governance",
+    "ar": "حوكمة البيانات"
+   },
+   [
+    {
+     "en": "One owner per field",
+     "ar": "مالك واحد لكل حقل"
+    },
+    {
+     "en": "Mandatory fields on forms",
+     "ar": "حقول إلزامية في النماذج"
+    },
+    {
+     "en": "Quarterly completeness score by branch",
+     "ar": "درجة اكتمال ربع سنوية لكل فرع"
+    }
+   ]
+  ],
+  [
+   {
+    "en": "Payroll notes discipline",
+    "ar": "انضباط ملاحظات الرواتب"
+   },
+   [
+    {
+     "en": "Write every payroll exception as a note with an owner",
+     "ar": "كل استثناء في الرواتب يُسجل كملاحظة بمسؤول"
+    },
+    {
+     "en": "Close a note only when the fix is visible in Cure",
+     "ar": "لا تُغلق الملاحظة إلا بعد ظهور التصحيح في Cure"
+    },
+    {
+     "en": "Open items move to the next month automatically",
+     "ar": "المفتوح ينتقل للشهر التالي تلقائيًا"
+    }
+   ]
+  ]
+ ]
+}

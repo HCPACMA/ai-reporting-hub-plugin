@@ -1,0 +1,17 @@
++-----------------------------+------+---------+
+| job                         | n    | avg_sal |
++-----------------------------+------+---------+
+| Administrative              | 89.0 | 4093.0  |
+| Midwife                     | 71.0 | 4752.0  |
+| Reception                   | 47.0 | 4077.0  |
+| Worker                      | 28.0 | 1814.0  |
+| Nurse                       | 25.0 | 5004.0  |
+| X-ray technician            | 12.0 | 4883.0  |
+| Laboratory technician       | 10.0 | 4710.0  |
+| General doctor              | 10.0 | 9700.0  |
+| Dental                      | 9.0  | 10000.0 |
+| Private duty nurse          | 6.0  | 3517.0  |
+| Internist                   | 6.0  | 16083.0 |
+| Medical insurance secretary | 5.0  | 3940.0  |
++-----------------------------+------+---------+
+  (12 rows)

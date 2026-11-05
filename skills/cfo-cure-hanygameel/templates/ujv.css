@@ -1,0 +1,10 @@
+/* ===== Unlinked JV (tax vouchers) section ===== */
+#sec-aud-ujv .ujv-wrap{overflow-x:auto; margin-top:6px; max-height:640px; overflow-y:auto;}
+#sec-aud-ujv .sm{display:block; font-size:10.5px; color:var(--ink-faint); line-height:1.45;}
+#sec-aud-ujv td.sm{display:table-cell;}
+.ujv-t td{vertical-align:top;}
+.ujv-t{min-width:980px;}
+.ujv-t .pill{white-space:normal; display:inline-block; max-width:190px;}
+.ujv-t td.ujv-do{min-width:170px; max-width:240px; font-weight:600; color:var(--ink);}
+.ujv-t td.ujv-do .sm{font-weight:400;}
+.ujv-t td.ar{max-width:260px;}

@@ -1,0 +1,3 @@
+-- Payroll header per month from {FROM_YM}. Columns: y, m, stf, basic, gosi_co, gosi_st, abs_d, ot, notposted
+-- notposted = rows whose STATUS is not P. A month where notposted = stf is the open draft run.
+SELECT m.YEAR_SALAR Y, m.MONTH_SALRY M, COUNT(*) STF, ROUND(SUM(m.BASIC_SALARY)) BASIC, ROUND(SUM(m.SOCIAL_INSURANCE_COMPANY)) GOSI_CO, ROUND(SUM(m.SOCIAL_INSURANCE_STAFF)) GOSI_ST, ROUND(SUM(m.ABSENCE_DEDUCTION)) ABS_D, ROUND(SUM(m.OVERTIME_AMOUNT)) OT, SUM(CASE WHEN m.STATUS<>'P' THEN 1 ELSE 0 END) NOTPOSTED FROM {P}PR_SALARY_TRANSACTION_M m WHERE m.YEAR_SALAR*100+m.MONTH_SALRY>={FROM_YM} GROUP BY m.YEAR_SALAR, m.MONTH_SALRY ORDER BY 1,2

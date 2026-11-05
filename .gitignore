@@ -1,0 +1,11 @@
+*.xlsx
+*.xls
+*.pdf
+*.tgz
+*.zip
+**/data/
+**/raw/
+**/raw_run/
+**/out/
+**/cache/
+__pycache__/

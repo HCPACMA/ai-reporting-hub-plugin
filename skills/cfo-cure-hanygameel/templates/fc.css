@@ -1,0 +1,10 @@
+/* Forecasting */
+.fc-line{fill:none; stroke:var(--accent); stroke-width:2; stroke-dasharray:6 4; vector-effect:non-scaling-stroke;}
+.fc-b80{fill:var(--accent); opacity:.16;} .fc-b95{fill:var(--accent); opacity:.07;}
+.fc-cut{stroke:var(--ink-faint); stroke-dasharray:2 3; vector-effect:non-scaling-stroke;}
+.fc-bt{fill:var(--warning); opacity:.85;} .fc-mtd{fill:var(--critical);}
+.lg-fc{width:16px; border-top:2px dashed var(--accent);} .lg-b80{width:14px; height:10px; background:var(--accent); opacity:.3; border-radius:2px;} .lg-b95{width:14px; height:10px; background:var(--accent); opacity:.12; border-radius:2px;}
+.lg-bt{color:var(--warning); font-size:10px;} .lg-mtd{color:var(--critical); font-size:10px;}
+.fc-mc{margin-bottom:14px;} .fc-mc-h{font-weight:700; font-size:12.5px; margin:6px 0;}
+.fc-mc td:first-child{color:var(--ink-muted); width:46%;}
+.fc-why{font-size:12px; min-width:260px;}

@@ -1,0 +1,3 @@
+-- Contract status matrix. Columns: st, cc, e, n, s. e = BLANK when END_DATE is null (an open-ended contract), FUT or PAST otherwise.
+-- LESSON (12 Oct 2026): a CASE that defaults to 'PAST' counted 15 open-ended contracts as expired. Always test END_DATE IS NULL first.
+SELECT c.STATUS ST, c.CURRENT_CONTRACT CC, CASE WHEN c.END_DATE IS NULL THEN 'BLANK' WHEN c.END_DATE>DATE '{ASOF}' THEN 'FUT' ELSE 'PAST' END E, COUNT(*) N, COUNT(DISTINCT c.STAFF_ID) S FROM {P}PS_STAFF_CONTRACT c GROUP BY c.STATUS, c.CURRENT_CONTRACT, CASE WHEN c.END_DATE IS NULL THEN 'BLANK' WHEN c.END_DATE>DATE '{ASOF}' THEN 'FUT' ELSE 'PAST' END ORDER BY 1,2,3

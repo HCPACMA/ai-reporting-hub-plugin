@@ -1,0 +1,3 @@
+-- Leavers by last payroll month: staff with no active current contract, bucketed by the last month they were paid. Columns: lm, n
+-- Used because SEPARATED_DATE is filled for only a few months of history at Al Faihaa. Check yours before switching to it.
+SELECT x.LM, COUNT(*) N FROM (SELECT s.STAFF_ID, TO_CHAR(TO_DATE(MAX(s.YEAR_SALAR*100+s.MONTH_SALRY),'YYYYMM'),'YYYY-MM') LM FROM {P}PR_SALARY_TRANSACTION_D s WHERE s.STAFF_ID NOT IN (SELECT STAFF_ID FROM {P}PS_STAFF_CONTRACT WHERE STATUS='A' AND CURRENT_CONTRACT='Y') GROUP BY s.STAFF_ID) x WHERE x.LM>='{FROM_YM_DASH}' GROUP BY x.LM ORDER BY 1

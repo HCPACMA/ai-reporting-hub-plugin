@@ -1,0 +1,53 @@
+/* ===== NPHIES invoices (Sehati fees) section ===== */
+#sec-aud-nphi .tbl-wrap{overflow-x:auto; margin-top:6px;}
+#sec-aud-nphi .sm{display:block; font-size:10.5px; color:var(--ink-faint); line-height:1.45;}
+#sec-aud-nphi td.sm{display:table-cell;}
+.nphi-t td{vertical-align:top;}
+.nphi-t tfoot td{font-weight:700; border-top:1.5px solid var(--border);}
+.nphi-t tr.on td{background:var(--accent-soft);}
+.nphi-t tr.est td{color:var(--ink-muted); font-style:italic;}
+.nphi-t td.warn{color:var(--warning); font-weight:600;}
+.nphi-miss{margin-top:12px; font-size:12.5px;}
+.nphi-miss summary{cursor:pointer; color:var(--ink-muted);}
+.nphi-miss .hint{font-size:11.5px; color:var(--ink-faint); margin:6px 0 0;}
+.nphi-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+.nphi-chips .chip{font-size:11.5px; border:1px solid var(--border); border-radius:999px; padding:3px 10px; background:var(--surface-2); color:var(--ink-muted); font-variant-numeric:tabular-nums;}
+.nphi-calc{display:flex; flex-direction:column; gap:12px; margin-top:6px;}
+.nphi-inv{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; padding:12px 14px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2);}
+.nphi-inv > div{display:flex; flex-direction:column; gap:3px; align-items:flex-start;}
+.nphi-inv .big{font-size:22px; font-variant-numeric:tabular-nums; color:var(--ink);}
+#sec-aud-nphi .lbl{font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+.nphi-also{font-size:12px; color:var(--ink-muted); margin:0;}
+.nphi-eq{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;}
+.nphi-eq .q{border:1px solid var(--accent-line); background:var(--accent-soft); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; align-items:flex-start;}
+.nphi-eq code{font-size:12.5px; color:var(--ink-muted);}
+.nphi-eq b{font-size:19px; font-variant-numeric:tabular-nums; color:var(--ink);}
+.nphi-h{margin:18px 0 6px; font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+.nphi-legend{display:flex; gap:8px; align-items:center; font-size:11.5px; color:var(--ink-muted); flex-wrap:wrap;}
+.nphi-legend .k{display:inline-block; width:12px; height:12px; border-radius:3px; margin-left:6px;}
+.nphi-legend .k.paid,.nphi-grid td.paid{background:var(--good-soft);}
+.nphi-legend .k.unpaid,.nphi-grid td.unpaid{background:var(--critical-soft);}
+.nphi-legend .k.miss,.nphi-grid td.miss{background:var(--surface-2); background-image:repeating-linear-gradient(45deg,transparent 0 5px,var(--warning-soft) 5px 7px);}
+.nphi-legend .k.popen,.nphi-grid td.popen{background:var(--warning-soft);}
+.nphi-src{font-size:11px; color:var(--ink-faint); width:100%;}
+.nphi-grid td,.nphi-grid th{white-space:nowrap; font-variant-numeric:tabular-nums;}
+.nphi-grid td.c{cursor:pointer;}
+.nphi-grid td.c:hover{outline:1.5px solid var(--accent); outline-offset:-2px;}
+.nphi-grid td.miss{color:var(--warning); text-align:center;}
+.nphi-grid .pdf{margin-left:4px; color:var(--accent); font-size:10px;}
+.nphi-det{margin-top:10px;}
+.nphi-det h4{margin:6px 0; font-size:13px;}
+.nphi-list{margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:var(--ink);}
+.nphi-list .pill{margin:0 4px;}
+.nphi-verdict{margin:4px 0 10px; font-size:13px; line-height:1.6;}
+.nphi-cl-list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:8px;}
+.nphi-cl-list li{display:flex; gap:10px; align-items:flex-start; border:1px solid var(--border); border-radius:10px; padding:9px 12px; background:var(--surface); font-size:12.5px;}
+.nphi-cl-list li .ic{flex:none; width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:700;}
+.nphi-cl-list li.ok .ic{background:var(--good-soft); color:var(--good);}
+.nphi-cl-list li.bad .ic{background:var(--critical-soft); color:var(--critical);}
+.nphi-cl-list li.na .ic{background:var(--surface-2); color:var(--ink-faint);}
+.nphi-bi-r{cursor:pointer;} .nphi-bi-r:hover td{background:var(--accent-soft);}
+.nphi-pg{display:flex; gap:12px; align-items:center; justify-content:flex-end; font-size:12px; color:var(--ink-muted); margin-top:8px;}
+.nphi-pg button{font:inherit; font-size:12px; border:1px solid var(--border); background:var(--surface); color:var(--ink); border-radius:7px; padding:4px 10px; cursor:pointer;}
+.nphi-pg button:disabled{opacity:.4; cursor:default;}
+#sec-aud-nphi .hint{font-size:12px; color:var(--ink-muted);}
