@@ -8,6 +8,7 @@ Auto-synced nightly from `D:\Financial Management\Financial Report\AI Reporting 
 - `ai-reporting-by-hanygameel`
 - `cfo-cure-hanygameel`
 - `hr-cure-hanygameel`
+- `rcm` (NPHIES RCM Audit, maintained from the second account in `skills/rcm/`)
 
 ## Install
 - Claude Code: `/plugin marketplace add HCPACMA/ai-reporting-hub-plugin` then `/plugin install ai-reporting-hub@hanygameel-plugins`
