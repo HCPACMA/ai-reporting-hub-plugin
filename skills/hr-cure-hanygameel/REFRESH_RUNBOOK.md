@@ -27,3 +27,6 @@ After the build, run the letters review (`docs/LETTERS_REVIEW_PLAYBOOK.md`) and 
 ## Known open decisions
 
 Names of leave type codes 09 and 17 · whether to move leavers to the recorded separation date once HR fills it · a scheduled monthly refresh (not created; needs approval).
+
+## Cure skin (7 Nov 2026)
+The template now carries the Cure skin block (see _theme/cure/README.md). Keep it when editing the template; to change the look edit _theme/cure and run apply_cure_skin.py hr on the template.

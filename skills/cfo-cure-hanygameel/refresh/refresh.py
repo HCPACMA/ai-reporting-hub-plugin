@@ -703,6 +703,13 @@ def build():
     out.append('- zak: ' + run('python3 build_zakat.py', 'zak').strip()[:160])
     h = open(HTML, encoding='utf-8').read(); h = patch(h, 'zak', J('zak/data_zak.json'))
     open(HTML, 'w', encoding='utf-8').write(h)
+    # Cure skin (Cure/EXSYS look): re-applied on every build, idempotent (templates/cure_skin.html)
+    sk = os.path.join(KIT, '..', 'templates', 'cure_skin.html')
+    if os.path.exists(sk):
+        sys.path.insert(0, KIT); from apply_cure_skin import apply as _skin
+        h = open(HTML, encoding='utf-8').read(); h = _skin(h, open(sk, encoding='utf-8').read())
+        open(HTML, 'w', encoding='utf-8').write(h); out.append('- cure skin: applied')
+    else: out.append('- cure skin: templates/cure_skin.html missing')
     open(os.path.join(rid, 'build.md'), 'w').write('\n'.join(out) + '\n'); print('\n'.join(out))
     if bad: print('\nREVIEW the checks above before publishing.')
 

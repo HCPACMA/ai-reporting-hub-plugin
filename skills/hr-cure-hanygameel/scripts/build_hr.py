@@ -453,6 +453,9 @@ def gates(D):
             if (r['st'] == 'ok') == bool(r['iss']): cb.append(f"{r['s']} status and issues disagree")
             for i in r['iss']:
                 if not (i['t']['en'] and i['t']['ar']): cb.append(f"{r['s']} issue lacks a language")
+        for d in cm.get('doctors', []):
+            if d['basis'] not in ('cash', 'cash_credit'): cb.append(f"{d['s']} bad basis")
+        if cm.get('doctors') and len(cm['doctors']) != sm['doctors']: cb.append('doctor basis list differs from review rows')
         if cb: ok = False; msgs.append("FAIL commission: " + "; ".join(cb[:8]))
         else: msgs.append(f"ok commission review valid: {sm['doctors']} doctors, {sm['bad']} need action, {sm['warn']} notes, month {cm['month']}")
     ld = D.get('leaveDays')

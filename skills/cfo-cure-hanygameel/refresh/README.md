@@ -24,3 +24,5 @@ Deep Analysis drivers and the monthly series (added 25 Sep 2026): batch A now al
 doctor/specialty). `build` rebuilds `DATA.drv` (`drv/build_drv.py`, open month = the day before the run)
 and `DATA.m` (`scripts/build_monthly_buckets.py --closed=<window start>`), and fails the gate if any month
 before the window moved.
+
+Cure skin (7 Nov 2026): `build` re-applies templates/cure_skin.html (from _theme/cure) to the Desk on every run.
