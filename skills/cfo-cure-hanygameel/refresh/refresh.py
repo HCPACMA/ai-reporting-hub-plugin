@@ -173,7 +173,7 @@ JOBS = {   # name: (batch, generator, parser)
     'vat_pin_mv':  ('A', g_vat_pin_mv, 'packed_nc'),
     'vat_pin_gl':  ('A', g_vat_pin_gl, 'packed_nc'),
     'vat_pin_nm':  ('A', g_vat_pin_nm, 'packed_nc'),
-    'is_mon':      ('A', g_is_mon, 'packed_nc'),
+    # is_mon derived from gl_mon at build (SQL file missing from kit)
     'vat_cls':     ('A', g_vat_cls, 'text1'),
     'yec':         ('A', g_yec, 'text1'),
     'lease_chk':   ('A', g_lease_chk, 'text1'),
@@ -241,6 +241,7 @@ def parse_text(t):   # packed rows: | bkt | n | r | _branch |  (r = rows joined 
     return out
 
 def parse(kind, s):
+    s = re.sub(r'(?:\|\s*x{150,}\s*)+(?=\|[^|]*\|\s*$)', '', s, flags=re.M)   # drop the RPAD filler column (forces big results into a file)
     if kind == 'packed':
         return parse_text(s)
     lines = [l for l in s.split('\n') if l.startswith('| ') and not re.match(r'^\|\s*(r|R|bkt|YM|g)\s*\|', l)]
@@ -490,7 +491,7 @@ def build():
     # direct method (voucher level) + indirect with non-cash entries removed (IAS 7.43): dmv/build_cfd.py
     if os.path.exists(os.path.join(ROOT, 'dmv', 'build_cfd.py')):
         try:
-            out.append('- cfd: ' + run('python3 build_cfd.py', 'dmv').split('\n')[0])
+            out.append('- cfd: ' + run(f'CFD_ASOF={asof} python3 build_cfd.py', 'dmv').split('\n')[0])
             C = J('gl/data_cfa_fixed.json')
         except SystemExit as e:
             if full: raise

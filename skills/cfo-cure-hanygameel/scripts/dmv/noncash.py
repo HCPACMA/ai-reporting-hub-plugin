@@ -5,7 +5,7 @@ def side(a):
     if a.startswith(('1110','1120','113','1111','1121')) or a in ('4300008','3380000','1410000','3280001','3280002'): return 'INV'
     if a.startswith(('2112','2113','2125','2128','221','222','223')) or a in ('1262000','3290001'): return 'FIN'
     return 'OP'
-def load(cut='2026-10-10'):
+def load(cut='2999-12-31'):
     rows=[r for r in json.load(open('ncv.json')) if r[1]<cut]
     V=collections.defaultdict(list)
     for v,dt,a,n in rows: V[v].append((dt,a,n))

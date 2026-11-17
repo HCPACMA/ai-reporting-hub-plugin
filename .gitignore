@@ -4,8 +4,7 @@
 *.tgz
 *.zip
 **/data/
-**/raw/
-**/raw_run/
+**/raw*/
 **/out/
 **/cache/
 __pycache__/
