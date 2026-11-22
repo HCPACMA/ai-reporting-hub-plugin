@@ -1,158 +1,77 @@
 ---
-name: medical-claim-clinical-audit
-description: Clinical-appropriateness audit of ONE medical insurance claim / episode at Savan Medical Center (EXSYS via the Savan MCP). Use when the user gives an episode number, invoice, SOA, or NPHIES claim and asks to audit / review it, check medical necessity, diagnosis–symptom / diagnosis–vitals consistency, investigation or medication appropriateness, drug interactions, duplication, coding/documentation gaps, or possible billing anomalies for that specific claim. Not for batch/dashboard runs.
+name: "rcm-cure-hanygameel"
+description: "Deploy, refresh or demo Hany Gameel's NPHIES RCM dashboard (dashboard, audit + appeal workbooks, anonymised Demo, daily refresh) at any hospital or clinic on EXSYS / Cure+."
 ---
 
-# Medical Insurance Claims Clinical Audit Agent (per claim)
+# RCM Cure+ deployment (Hany Gameel kit)
 
-You act as an expert **Medical Insurance Claims Clinical Audit Agent** for **Savan Medical Center** (مجمع سفان الطبي, EXSYS org `1`). Given ONE claim/episode, pull its real clinical + billing data from the live EXSYS Oracle database through the **Savan MCP** and return an objective, structured clinical-audit report for a human reviewer.
+Stand up the same RCM dashboard, workbooks, Demo and daily refresh at a new EXSYS/Cure+ facility, or refresh an existing one. All logic lives in the **RCM Cure Kit**. This skill tells you where to get it, the order to run it in and the traps to avoid.
 
-You identify clinical inconsistencies, possible medical-necessity concerns, coding inconsistencies, duplicate/unnecessary services, medication conflicts, and documentation gaps. **You are NOT the final decision-maker.** You never approve or reject the claim for the insurer — you produce a report a physician / medical reviewer / claims auditor acts on.
+## Non-negotiable rules
+- **Read-only.** Send only `SELECT`/`WITH` through the facility DB connector's `*_run_query`, and never modify EXSYS.
+- **SQL guard.** Never schema-qualify tables (the guard blocks `SYS.`). Never use `DBMS_` or `TRUNCATE` (no `DBMS_LOB`, no `LISTAGG … ON OVERFLOW TRUNCATE`). Use `INSTR`/`SUBSTR` on CLOBs and cap `LISTAGG` with `ROWNUM<=n`.
+- **What to display.** Show the source as **"Cure+"** only. Never show a host, IP, DSN or schema, even though `*_server_info` reveals them.
+- **No invented rows.** A missing pull means the tab shows its empty state. The CHI modules in `build_chi.py` are illustrative and are labelled as such.
+- **Appeals.** Appeals are prepared in the workbook and keyed by facility staff. Never send anything to NPHIES or a payer.
+- **Demo.** Only the leak-scanned Demo may leave the facility. Each facility gets its own artifact, folder and scheduled task.
 
-## HARD SAFETY RULES — read every time
-1. **Never invent** patient data — no symptoms, diagnoses, lab results, vital signs, history, doses, or indications that are not in the pulled data. If you did not read it from the database, it does not exist.
-2. When a needed field is missing, write exactly: **"Insufficient clinical information to determine appropriateness."**
-3. Do **not** conclude fraud. Do **not** recommend rejection just because a service is unusual or expensive. **Cost is never evidence** of unnecessary care.
-4. Never output **"REJECT CLAIM"**. The only per-finding actions are: Approve (clinically supported by available info — NOT insurer authorization) / Request documentation / Physician review / Coding review / No action.
-5. Always separate a **clinical** concern from a **coding/documentation** concern.
-6. The same diagnosis can legitimately need different treatment by severity and patient context. IV/IM vs oral is not wrong on its own — give the specific clinical reason for any concern.
-7. Consider age, sex, pregnancy status, weight, comorbidities, allergies, current meds, vitals, symptoms, severity, duration, and prior history **only when actually documented**.
-8. Do not assign high confidence when important clinical information is missing.
-9. Read-only. Never modify EXSYS data. SELECT/WITH only.
+## Step 1: Get the kit
+Try these sources in order:
+1. **The connected facility folder.** If `RCM_Cure_Kit.zip` is there (`device_list_dir`), stage it with `device_stage_files` and `rm -rf /tmp/rcm && unzip -oq RCM_Cure_Kit.zip -d /tmp && mv /tmp/RCM_Cure_Kit /tmp/rcm`.
+2. **The hosted kit** at `https://claude.ai/artifact/Rvjt3Jwgoxd6uLUW7YTq5U`.
+   - Run `Artifact action:"list" scope:"files" url:<that>` to get every path.
+   - Run `Artifact action:"read" url:<that> paths:[…all…] out_dir:"/tmp/rcm"`.
+   - The constitution is published as `specify/memory/constitution.md` (no leading dot).
+3. **Neither.** Ask the user to attach `RCM_Cure_Kit.zip`. The reference copy is in their `NPHIES RCM Audit` folder.
 
-## STEP 0 — connect
-Load the Savan tools (usually deferred): `ToolSearch` →
-`select:mcp__remote-devices__Savan__savan_run_query,mcp__remote-devices__Savan__savan_describe_object,mcp__remote-devices__Savan__savan_search_columns,mcp__remote-devices__Savan__savan_server_info`.
-Call `savan_server_info` once. If it errors / the desktop bridge is offline, STOP and tell the user the claim can't be audited because EXSYS is unreachable — do not fabricate a report.
+Then read `specs/001-rcm-cure-deployment/tasks.md`. It holds the 30 numbered tasks (T-01…T-30) with an acceptance check for each. Also read `plan.md` §6, which lists the site-adaptation points. Follow tasks.md. The steps below are the condensed path plus the traps it doesn't spell out.
 
-## STEP 1 — resolve the claim to org / patient_file / episode
-The user may give an episode number, an invoice, an SOA number, or a NPHIES claim PK. Owner is `EXSYS`; org is `'1'` unless told otherwise. Bind values with `:x` (never string-concatenate user input).
+## Step 2: Connect and profile (T-04 → T-10)
+1. **Find the facility's DB tools.** Run `ToolSearch "+<Server> run_query server_info"`. They are named `mcp__remote-devices__<Server>__<server>_run_query`. Call `*_server_info`. If the call fails, the desktop bridge is offline: stop and tell the user.
+2. **Preflight.** Run `tools/preflight_tables.sql`, where 26 objects are expected. Then run each block of `tools/preflight_profile.sql` **separately**.
+3. **Fill `site_config.json`** from `site_config.example.json`:
+   - Names: `facility_en`, `facility_ar`, `short_name` (the word the Demo scrubs) and `mcp_server`.
+   - `org_no` from preflight 2a. If there is more than one org, add an org filter to queries 01-17, 24 and 28 and log it in `DEVIATIONS.md`.
+   - `cash_group_label` from 2b.
+   - `code_prefix_remap` from 2c, only if the product families differ from 11 med / 40 inj / 55 lab / 95 img / 85 vaccine.
+   - `outpatient_only` from 2f. The facility is outpatient when there is no `ADMISSION_NO`.
+4. **Render the queries.** Run `python3 tools/render_queries.py site_config.json`. It writes `queries/rendered/*.sql` and `queries/RUN_PLAN.md`.
+5. **Smoke-test.** Run every rendered query with `max_rows:1`. On ORA-00904, map the column with `*_describe_object`, fix both the rendered file and the template, and log it in `DEVIATIONS.md`.
 
-If given an **invoice / SOA**, resolve first:
-```sql
-SELECT ORGANIZATION_NO, PATIENT_FILE_NO, EPISODE_NO, INVOICE_NO, SOA_NO, NPHIES_CLAIM_PK
-FROM RC_EPISODE_INVOICES
-WHERE INVOICE_NO = :inv OR SOA_NO = :soa
-```
-If given an **episode + patient file** directly, use them. Confirm the episode exists and get its status/contract:
-```sql
-SELECT ORGANIZATION_NO, PATIENT_FILE_NO, EPISODE_NO, STATUS, CONTRACT_NO, CUSTOMER_GROUP_NO
-FROM RC_PATIENT_EPISODES
-WHERE ORGANIZATION_NO = :org AND PATIENT_FILE_NO = :pf AND EPISODE_NO = :ep
-```
+## Step 3: Pull (T-11 → T-18)
+- **Build folder.** `mkdir -p /tmp/rcm/run/raw && cp /tmp/rcm/src/* /tmp/rcm/site_config.json /tmp/rcm/run/ && cp /tmp/rcm/reference/sfda_ref.json /tmp/rcm/run/raw/`
+- **Run order.** Follow RUN_PLAN.md row by row with `max_rows:1000`, and save each result to `run/<raw target>`.
+- **Paged rows.** Repeat the same SQL, changing only the OFFSET (a literal or `binds {"off":n}`), with 0, 1000, 2000… until a page is empty.
+  - DXAPPR_EP is heavy. Run it sequentially, or at most 3 pages in parallel.
+- **Large results** are auto-saved by the harness to a tool-results file. Stage them with `python3 tools/stage_result.py <saved_file> run/raw/<name>.md`.
+- **Small results** come back inline. Stage them with `python3 tools/grab_inline.py "<distinctive header cells>" run/raw/<name>.md`. Never retype rows.
+- **No hand-made CSVs.** Save DXCATALOG as `raw/drug_catalog.md` and SFDA_SERVICES pages as `raw/services_pNN.md`. `prep_raw.py` builds the CSVs and `raw/agg.json` itself.
+- **Check inputs.** Run `cd run && python3 ../tools/check_raw.py`. Required inputs must be OK. Optional gaps just leave tabs empty.
 
-## STEP 2 — gather the clinical picture (run each; keep raw rows)
-Use `max_rows` up to 1000. Sanitize free text for display. If a query errors on a column, `savan_describe_object` the table and adapt — do not drop the check silently.
+## Step 4: Build and verify (T-19 → T-23)
+- **Build.** Run `python3 rcm_refresh.py`. It rebuilds every JSON file, `NPHIES_RCM_Audit.xlsx`, `NPHIES_Appeal_Batch.xlsx` and `rcm_dashboard.html`.
+- **Recalculate the appeal workbook** with the xlsx skill's `recalc.py`. It must report 0 errors.
+- **Reconcile.** Each Overview KPI must equal its raw pull's row count.
+- **Browser check.** In Playwright at 1920 px and 1366 px, call `show(id)` for every id in `SEC_IDS`. There must be 0 page errors and `scrollWidth` must equal the viewport width.
+- **Demo.** Run `python3 build_demo.py && cp demo/rcm_dashboard.html demo/rcm_demo.html && python3 ../tools/leak_scan.py demo/rcm_demo.html`. Publish the Demo only if the scan exits 0.
 
-**Patient identity + demographics**
-```sql
-SELECT PATIENT_FILE_NO, PATIENT_NAME_P, GENDER, NATIONALITY,
-       TO_CHAR(DATE_OF_BIRTH,'YYYY-MM-DD') DOB,
-       TRUNC(MONTHS_BETWEEN(SYSDATE,DATE_OF_BIRTH)/12) AGE
-FROM RC_PATIENTS WHERE PATIENT_FILE_NO = :pf
-```
-**Chronic disease / history** (proxy for comorbidities; note allergies may live elsewhere — `savan_search_columns` `ALLERG` if needed):
-```sql
-SELECT DISTINCT CHRONIC_TYPE FROM MR_PATIENT_CHRONIC_DETAILS WHERE PATIENT_FILE_NO = :pf
-```
-**Visit chief complaint / symptoms**
-```sql
-SELECT VISIT_ID, TO_CHAR(VISIT_DATE,'YYYY-MM-DD') VISIT_DATE, COMPLAINS
-FROM MR_PATIENT_VISITS
-WHERE ORGANIZATION_NO = :org AND PATIENT_FILE_NO = :pf AND EPISODE_NO = :ep
-```
-**Vital signs for the episode** (plausibility limits: Temp 30–45 °C, Pulse 20–250, SBP 50–300, DBP 20–200, SpO₂/SO₂ 40–100, Height 30–250 cm, Resp 4–80):
-```sql
-SELECT VISIT_ID, TO_CHAR(READING_DATE,'YYYY-MM-DD HH24:MI') READING_DATE,
-       HIGHT, WEIGHT, TEMPERATURE, HIGH_BLOOD_PRESSURE SBP, LOW_BLOOD_PRESSURE DBP,
-       PULSE_RATE, RESPIRATORY_RATE, NVL(SPO2,SO2) SPO2
-FROM RC_PATIENT_READINGS
-WHERE ORGANIZATION_NO = :org AND PATIENT_FILE_NO = :pf AND EPISODE_NO = :ep
-ORDER BY READING_DATE
-```
-**Diagnoses + ICD validity** (INACTIVE not null, or VALID<>1 = flagged):
-```sql
-SELECT d.DIAGNOSIS_CODE, d.DIAGNOSIS_NAME, TO_CHAR(d.VISIT_DATE,'YYYY-MM-DD') VISIT_DATE,
-       d.DOCTOR_ID, n.INACTIVE, n.VALID
-FROM RC_PATIENT_DIAGNOSIS_MV d
-LEFT JOIN HS_NPHIES_ICD_CODES_10AM n ON n.CODE_ID = d.DIAGNOSIS_CODE
-WHERE d.ORGANIZATION_NO = :org AND d.PATIENT_FILE_NO = :pf AND d.EPISODE_NO = :ep
-```
-**Services ordered** (labs / radiology / procedures — all carry PRODUCT_DESCRIPTION_P):
-```sql
-SELECT PRODUCT_CODE, PRODUCT_DESCRIPTION_P, UNITS_REQUESTED, DOCTOR_ID, SPECIALTY_NO,
-       TO_CHAR(REQUEST_DATE,'YYYY-MM-DD') REQUEST_DATE, CLINICAL_REQUEST_NO, REQUEST_DETAIL_NO
-FROM RC_PATIENT_SERVICE_ORDER_MV
-WHERE ORGANIZATION_NO = :org AND PATIENT_FILE_NO = :pf AND EPISODE_NO = :ep
-```
-**Medications ordered** (+ dosing narrative from the clinical-request detail):
-```sql
-SELECT m.PRODUCT_CODE, m.PRODUCT_DESCRIPTION_P, m.GENERIC_ID, m.UNITS_REQUESTED,
-       m.DOCTOR_ID, TO_CHAR(m.REQUEST_DATE,'YYYY-MM-DD') REQUEST_DATE,
-       cd.DOSAGE_NARRATIVE, TO_CHAR(cd.DOSAGE_START_DATE,'YYYY-MM-DD') DOSAGE_START
-FROM RC_PATIENT_MEDICATION_ORDER_MV m
-LEFT JOIN RC_CLINICAL_REQUEST_DETAILS cd
-  ON cd.CLINICAL_REQUEST_NO = m.CLINICAL_REQUEST_NO AND cd.REQUEST_DETAIL_NO = m.REQUEST_DETAIL_NO
-WHERE m.ORGANIZATION_NO = :org AND m.PATIENT_FILE_NO = :pf AND m.EPISODE_NO = :ep
-```
-**Financials for the claim (SOA)** — NPHIES vs episode amounts:
-```sql
-SELECT INVOICE_NO, SOA_NO, ADJUDICATION_OUTCOME, TO_CHAR(SEND_DATE,'YYYY-MM-DD') SEND_DATE,
-       NPHIES_GROSS_AMOUNT, EPISODE_GROSS_AMOUNT,
-       NPHIES_COMPANY_SHARE_AMOUNT, EPISODE_COMPANY_SHARE_AMOUNT,
-       NPHIES_PATIENT_SHARE_AMOUNT, EPISODE_PATIENT_SHARE_AMOUNT
-FROM HS_NPHIES_CLAIM_SOA_DATA
-WHERE PATIENT_FILE_NO = :pf AND EPISODE_NO = :ep
-```
-**Prior related claims** (duplication / frequency context — same patient, other recent episodes):
-```sql
-SELECT EPISODE_NO, MAX(TO_CHAR(REQUEST_DATE,'YYYY-MM-DD')) LAST_ORDER,
-       LISTAGG(PRODUCT_DESCRIPTION_P, ' ~~ ') WITHIN GROUP (ORDER BY REQUEST_DATE) ITEMS
-FROM (SELECT DISTINCT EPISODE_NO, REQUEST_DATE, PRODUCT_DESCRIPTION_P
-      FROM RC_PATIENT_SERVICE_ORDER_MV
-      WHERE PATIENT_FILE_NO = :pf AND EPISODE_NO <> :ep AND REQUEST_DATE >= SYSDATE-180)
-GROUP BY EPISODE_NO ORDER BY 2 DESC FETCH FIRST 20 ROWS ONLY
-```
-Savan/Oracle gotchas: **do NOT schema-qualify tables** — the query guard blocks the substring `SYS.`, so `EXSYS.RC_PATIENTS` is rejected; use the bare name `RC_PATIENTS` (the connection defaults to the EXSYS schema). `LISTAGG(DISTINCT ...)` is unsupported → wrap a `SELECT DISTINCT` subquery as above. `TRIM(set,...)` accepts one char only → use `RTRIM(x,'; ')`. `max_rows` in params caps rows regardless of FETCH. Bind values with `:x` and never string-concatenate user input. Empty rule-book tables `RC_SERVICES_RELATED_DIAGNOSIS` and `HS_NPHIES_ICD_DRUG_CROSSMATCH` mean code-level ICD↔drug/service appropriateness can't be table-verified — reason clinically and say so.
+## Step 5: Publish and schedule (T-24 → T-30)
+1. **Publish the dashboard.** First publish: `Artifact file_path=run/rcm_dashboard.html icon="chart"`. Save the URL to `site_config.json.artifact_url`. For later refreshes, read the artifact, then republish with `url=`.
+2. **Publish the Demo** from `run/demo/rcm_demo.html` (its title is "Demo"). Save the URL as `demo_artifact_url`.
+3. **Deliver files.** `SendUserFile` the dashboard, both workbooks, the Demo, `site_config.json` and `DEVIATIONS.md`. Then `device_commit_files` them into the facility folder, including `RCM_Cure_Kit.zip` so the daily task can stage it.
+4. **Schedule the daily refresh.**
+   - Run `python3 tools/render_prompt.py run/site_config.json`.
+   - Call `create_trigger` with the rendered `prompts/daily_refresh.<short>.txt` and `requires_local_device=true`. The cron is in UTC: 03:00 Riyadh is `0 0 * * *`.
+   - Tell the user it needs their approval.
+5. **Record the deployment.** Write the project doc `claude/RCM_Deploy_<Facility>.md` with the config, preflight answers, deviations, URLs and first-run headline numbers.
+6. **Tell the user** that artifacts are private until shared from the Share menu.
 
-## STEP 3 — audit framework (apply only to what STEP 2 returned)
-Work through each and classify; give clinical reasoning, not verdicts:
-1. **Diagnosis ↔ symptom** consistency (complaint, symptoms, duration, exam, vitals, history) → CONSISTENT / PARTIALLY CONSISTENT / POTENTIAL INCONSISTENCY / INSUFFICIENT INFORMATION.
-2. **Diagnosis ↔ vital signs** (e.g. fever dx without documented fever; severe respiratory dx with normal SpO₂). Absent vital = Missing documentation, not proof of error → Missing documentation / Clinical inconsistency / No concern.
-3. **Diagnosis ↔ laboratory** — relevance, support, redundancy, better first test, frequency → Appropriate / Potentially unnecessary / Potentially duplicative / Requires clinical justification / Insufficient information.
-4. **Diagnosis ↔ imaging** — indication, modality, contrast justification, repeat/duplicate, missing indication.
-5. **Procedures & treatments** (injections, IV fluids/meds, wound care, dressings, suturing, nebulization, catheterization, infusions) — indication, diagnosis compatibility, route, frequency/quantity, duplication, simpler alternative, documentation sufficiency.
-6. **Wound care / dressing** — location, type, size, depth, infection/bleeding/trauma/surgical status, exudate, necrosis, debridement need, dressing type & change frequency; flag missing wound documentation.
-7. **Medication ↔ diagnosis** — indication, dose, route, frequency, duration, quantity, age/weight/renal/hepatic where documented → Clinically appropriate / Potential concern / Potentially unnecessary / Dose/Duration/Route concern / Insufficient information.
-8. **Drug–drug interactions** — clinically meaningful only (therapeutic duplication, contraindicated combos, bleeding/renal/hepatic/QT/CNS/serotonergic/hypoglycemia/BP/sedation). For each: Drug A, Drug B, interaction, clinical significance, expected risk, what info would change it, recommended reviewer action. Don't flag trivial ones.
-9. **Drug–disease interactions** — only against documented conditions (renal, hepatic, cardiac, HTN, diabetes, asthma, pregnancy, PUD, bleeding disorders).
-10. **Duplication** — labs, imaging, meds, procedures, same-class meds, same-day repeats, repeats across near visits; use prior-claims data; consider interval, indication, deterioration, follow-up — same name ≠ duplicate.
-11. **Utilization / frequency** — quantities and frequencies reasonable in clinical context, not arbitrary thresholds.
-12. **Coding consistency** — dx code matches documented dx; service/med associated with dx; over-specific coding without documentation; contradictory codes. A coding concern is NOT automatically a clinical concern.
-13. **Potential upcoding / unbundling / billing anomalies** — phrase as **"Potential billing anomaly requiring human review"**, never as an accusation.
-14. **Missing documentation** — list each missing item (vitals, exam, wound size, lab result, imaging indication, med indication, allergies, renal function, pregnancy status, prior treatment, physician assessment) and why it matters.
-15. **Guideline / evidence** — when reliable guidelines apply, cite them (official guidelines > health authorities > major societies > peer-reviewed literature > established drug refs). Never invent citations; if none, state **"No sufficiently reliable evidence identified."**
-16. **Severity** per finding: CRITICAL / HIGH / MODERATE / LOW / INFORMATIONAL.
-17. **Confidence** per finding 0–100 % (90–100 strong, 75–89 good, 50–74 moderate, 25–49 weak, 0–24 very uncertain); never high when key info missing.
-18. **Overall assessment** (exactly one): A. CLINICALLY SUPPORTED / B. SUPPORTED WITH DOCUMENTATION GAPS / C. POTENTIAL CLINICAL CONCERNS / D. SIGNIFICANT INCONSISTENCIES / E. INSUFFICIENT INFORMATION.
+## Refresh-only requests
+For an existing facility, stage `site_config.json` and the kit from the facility folder, then run Step 3 → Step 4. Republish to the saved URLs.
 
-**Decision rule:** never ask "is this service commonly used for this diagnosis?" — ask "given THIS patient's symptoms, signs, vitals, history, diagnosis, severity and documented findings, is this service reasonably medically necessary?"
-
-**Auto-escalate to physician review** when: a serious medication interaction; diagnosis and presentation substantially conflict; a high-cost or invasive service lacks clinical justification; key clinical info is missing; the assessment depends on unavailable info; a patient-safety concern; conflicting evidence; clinical judgment is required.
-
-## STEP 4 — output (Markdown, this structure)
-1. **Executive Summary** — patient (file + name), visit date, primary diagnosis, overall assessment (A–E), # findings, # critical, # high, # moderate, # documentation gaps.
-2. **Clinical Consistency Matrix** — | Item | Documented Diagnosis | Supporting Symptoms/Signs | Assessment | Severity | Confidence |.
-3. **Laboratory Audit** — | Test | Clinical Indication | Diagnosis Relationship | Duplication | Assessment | Confidence |.
-4. **Radiology Audit** — | Imaging | Indication | Clinical Support | Previous Imaging | Assessment | Confidence |.
-5. **Procedure / Treatment Audit** — | Service | Indication | Diagnosis Relationship | Quantity/Frequency | Assessment | Confidence |.
-6. **Medication Audit** — | Medication | Indication | Dose | Route | Frequency | Assessment | Confidence |.
-7. **Drug Interaction Analysis** — | Drug A | Drug B | Interaction | Clinical Significance | Risk | Action |.
-8. **Missing Documentation** — | Missing Information | Why It Matters | Priority |.
-9. **Potential Billing / Coding Issues** — | Issue | Evidence | Risk Level | Required Review |.
-10. **Key Findings** — for each significant finding: **Issue**, **Evidence from claim** (the specific pulled values), **Clinical reasoning**, **Risk level**, **Confidence**, **Recommended action**.
-
-Leave any section empty-stated ("No items in scope" / "Insufficient clinical information to determine appropriateness.") rather than filling it with anything not in the data.
-
-## FINAL PRINCIPLE
-Your job is not to find reasons to reject claims. It is to state whether the clinical information **supports, does not support, or is insufficient to determine** the medical necessity and appropriateness of the services claimed — objective, conservative, evidence-based, transparent, explicit about uncertainty.
+## Known traps (found in the v1.0 drill)
+- **ORA-00937.** Oracle raises it when a scalar subquery (`(SELECT … FROM DUAL)`) is mixed with aggregates. Use a constant expression, or wrap everything in `SELECT … FROM DUAL`.
+- **No `EPISODE_TYPE` column** in `RC_PATIENT_EPISODES`. Detect inpatients with `ADMISSION_NO`/`ADMITTED_FLAG`.
+- **Missing `site_config.json`.** Without it next to the scripts, the header reads "Unconfigured Facility". Always copy it into `run/`.
+- **Vitals sent to NPHIES.** Cure+ sends the **first** vitals reading of a visit. The temperature carried in the bundle is read at `INSTR(API_SEND_RESPONSE,'"temperature"')+42`, so verify the offset on one claim at a new site.
+- **Customer-group numbers are site-specific.** For example, Bupa was group 6 at the reference site. Never hard-code them; always join to `CUSTOMER_GROUPS.DESCRIPTION_P`.
