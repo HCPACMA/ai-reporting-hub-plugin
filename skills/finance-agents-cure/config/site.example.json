@@ -1,0 +1,53 @@
+{
+  "site": "example",
+  "company_name_ar": "اسم الشركة",
+  "erp": "EXSYS (Cure)",
+  "read_only_db_user_confirmed": false,
+  "mcp_server": "Cure_MCP",
+  "branches": [
+    {
+      "key": "Main",
+      "dsn": "EXSYS",
+      "schema_prefix": "EXSYS.",
+      "cost_centre": "001",
+      "name_ar": "الفرع الرئيسي"
+    }
+  ],
+  "cost_centres": {
+    "000": "Head office"
+  },
+  "cancelled_status": "C",
+  "accounts": {
+    "ar_insurance_control": null,
+    "ap_suppliers_control": null,
+    "vat_output": null,
+    "vat_input": null,
+    "unearned_rent": null,
+    "rental_income": null,
+    "drug_margin_revenue": null,
+    "vat_settlement": null
+  },
+  "nphies_branches": [],
+  "inventory": {
+    "cost_source_branch": "Main"
+  },
+  "vat": {
+    "return_frequency": "monthly"
+  },
+  "folders": {
+    "hub_root": "<path to AI Reporting HUB>",
+    "runs": "Finance-Dept/runs",
+    "supplier_statements": null,
+    "hr_letters": null,
+    "doctor_commission": null,
+    "settlements": null
+  },
+  "rules_dir": "rules/<site>",
+  "suppliers_prior_approval": [],
+  "language": "ar",
+  "voucher_prefix_branch": {},
+  "voucher_created_date_source": null,
+  "ap": {
+    "default_credit_term_codes": []
+  }
+}

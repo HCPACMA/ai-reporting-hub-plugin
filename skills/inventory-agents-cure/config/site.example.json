@@ -1,0 +1,35 @@
+{
+  "site": "example",
+  "company_name_ar": "اسم الشركة",
+  "erp": "EXSYS (Cure)",
+  "read_only_db_user_confirmed": false,
+  "mcp_server": "Cure_MCP",
+  "inventory_database_branch": "Main",
+  "inventory_note": "All warehouses run on the Riyadh database for every branch; item cost single-sourced there.",
+  "cancelled_status": "C",
+  "tables": {
+    "transactions": "IM_PRODUCTS_TRANSACTIONS",
+    "purchase_returns": [
+      "IM_PURCHASE_INVOICE_RETURN_M",
+      "IM_PURCHASE_INVOICE_RETURN_D"
+    ],
+    "adjustments": [
+      "IM_STOCK_ADJUSTMENTS_M",
+      "IM_STOCK_ADJUSTMENTS_D"
+    ],
+    "attachments": "EX_ATTACHMENTS"
+  },
+  "folders": {
+    "hub_root": "<path>",
+    "runs": "Inventory-Dept/runs",
+    "dashboard_work": "Inventory/alfaihaa",
+    "runbook": "Inventory/alfaihaa/REFRESH_RUNBOOK.md"
+  },
+  "dashboard": {
+    "live_slug": null,
+    "demo_slug": null,
+    "capabilities": {}
+  },
+  "rules_dir": "rules/<site>",
+  "language": "ar"
+}

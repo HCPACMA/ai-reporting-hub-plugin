@@ -1,0 +1,84 @@
+{
+  "version": "1.0.0",
+  "note": "Single source of truth for the department: agents/*.md, the org chart and the 3D office page must match this file (checked by scripts/validate_kit.py).",
+  "roles": [
+    {
+      "id": "finance-manager", "name_ar": "المدير المالي", "name_en": "Finance Manager",
+      "reports_to": "board", "kind": "orchestrator", "color": "#3b82f6",
+      "summary_ar": "يقود الإدارة المالية: يستقبل الطلبات، يوزعها على الفريق، ويراجع المخرجات النهائية قبل رفعها للإدارة العليا.",
+      "responsibilities_ar": ["توزيع المهام على رئيس الحسابات والمحاسبين", "مراجعة المخرجات النهائية واعتمادها", "إعداد تقرير مجلس الإدارة والتوصيات", "متابعة مؤشرات الإقفال الشهري", "تصعيد الملاحظات الجوهرية"],
+      "uses": ["skill:cfo-cure-hanygameel (board report, Modeling Desk)"],
+      "outputs": ["runs/<period>/finance-manager/summary.md"], "cadence": "monthly + on request"
+    },
+    {
+      "id": "chief-accountant", "name_ar": "رئيس الحسابات", "name_en": "Chief Accountant",
+      "reports_to": "finance-manager", "kind": "checker", "color": "#8b5cf6",
+      "summary_ar": "يشرف على المحاسبين ويطبّق مبدأ المُعِد والمراجع.",
+      "responsibilities_ar": ["مراجعة شغل كل محاسب مقابل القواعد الثابتة", "اعتماد إقفال الشهر", "إرجاع الملاحظات للمحاسب مع السبب", "التأكد إن كل ملاحظة معها دليل", "رفع الملخص للمدير المالي"],
+      "uses": ["rules_dir", "contracts/handoff.schema.json"],
+      "outputs": ["runs/<period>/chief-accountant/review.md"], "cadence": "after every maker handoff"
+    },
+    {
+      "id": "ar-insurance-accountant", "name_ar": "محاسب الذمم المدينة والتأمين", "name_en": "AR & Insurance Accountant",
+      "reports_to": "chief-accountant", "kind": "maker", "color": "#10b981",
+      "summary_ar": "مسؤول عن مستحقات شركات التأمين ومطابقتها مع الأستاذ العام.",
+      "responsibilities_ar": ["مراجعة دفعات شركات التأمين على حساب التأمين الرئيسي", "إعداد كشوف حساب شركات التأمين", "مطابقة المخالصات مع الأستاذ", "متابعة مطالبات NPHIES والمرفوضات"],
+      "site_keys": ["accounts.ar_insurance_control", "nphies_branches"],
+      "uses": ["skill:cfo-cure-hanygameel (AR Audit, AR Accounts Statement, AR Reconciliation tabs)"],
+      "outputs": ["runs/<period>/ar-insurance-accountant/handoff.json"], "cadence": "monthly"
+    },
+    {
+      "id": "ap-supplier-accountant", "name_ar": "محاسب الموردين", "name_en": "AP / Supplier Accountant",
+      "reports_to": "chief-accountant", "kind": "maker", "color": "#06b6d4",
+      "summary_ar": "يطابق كشوف حساب الموردين ويجهّز المستحقات للدفع.",
+      "responsibilities_ar": ["مطابقة كشف حساب كل مورد مع الأستاذ", "تصنيف الفواتير المستحقة", "تجهيز ملف التحويل البنكي الجماعي (للمراجعة البشرية فقط)", "متابعة الفروقات مع الموردين"],
+      "site_keys": ["accounts.ap_suppliers_control", "folders.supplier_statements"],
+      "uses": ["skill:cfo-cure-hanygameel (supplier dues)"],
+      "outputs": ["runs/<period>/ap-supplier-accountant/handoff.json"], "cadence": "monthly"
+    },
+    {
+      "id": "vat-accountant", "name_ar": "محاسب الضريبة", "name_en": "VAT Accountant",
+      "reports_to": "chief-accountant", "kind": "maker", "color": "#f59e0b",
+      "summary_ar": "مسؤول عن الإقرار الضريبي والفاتورة الإلكترونية.",
+      "responsibilities_ar": ["إعداد ومطابقة الإقرار الضريبي", "توزيع فواتير التأمين المجمّعة على الأشهر", "مراجعة الإشعارات الدائنة", "متابعة ردود ZATCA على الفواتير"],
+      "site_keys": ["accounts.vat_output", "accounts.vat_input", "vat.return_frequency"],
+      "uses": ["skill:cfo-cure-hanygameel (VAT tabs, scripts/build_vat.py)"],
+      "outputs": ["runs/<period>/vat-accountant/handoff.json"], "cadence": "monthly / quarterly"
+    },
+    {
+      "id": "payroll-accountant", "name_ar": "محاسب الرواتب", "name_en": "Payroll Accountant",
+      "reports_to": "chief-accountant", "kind": "maker", "color": "#ec4899",
+      "summary_ar": "يراجع الرواتب والقرارات الإدارية ونسب الأطباء.",
+      "responsibilities_ar": ["مراجعة القرارات الإدارية وخطابات الإجازات مقابل Cure", "مطابقة اشتراكات GOSI", "احتساب نسب الأطباء الشهرية", "مراجعة السلف والاستقطاعات"],
+      "site_keys": ["folders.hr_letters", "folders.doctor_commission"],
+      "uses": ["skill:hr-cure-hanygameel (gosi_check.py, commission_review.py, LETTERS_REVIEW_PLAYBOOK.md)"],
+      "outputs": ["runs/<period>/payroll-accountant/handoff.json"], "cadence": "monthly"
+    },
+    {
+      "id": "cost-inventory-accountant", "name_ar": "محاسب التكاليف والمخزون", "name_en": "Cost & Inventory Accountant",
+      "reports_to": "chief-accountant", "kind": "maker", "color": "#84cc16",
+      "summary_ar": "يحسب تكلفة الخدمة ويدقق حركات المخزون.",
+      "responsibilities_ar": ["تحديث خريطة تكلفة الخدمة", "تدقيق حركات المخزون والجرد", "ربط الخدمات بأصناف المخزون", "تحليل هامش الخدمة"],
+      "site_keys": ["inventory.cost_source_branch"],
+      "uses": ["skill:cfo-cure-hanygameel (scripts/build_cost.py, costcalc.py)"],
+      "outputs": ["runs/<period>/cost-inventory-accountant/handoff.json"], "cadence": "monthly"
+    },
+    {
+      "id": "gl-accountant", "name_ar": "محاسب الأستاذ العام", "name_en": "General Ledger Accountant",
+      "reports_to": "chief-accountant", "kind": "maker", "color": "#94a3b8",
+      "summary_ar": "يجهّز القيود والتسويات وميزان المراجعة للإقفال.",
+      "responsibilities_ar": ["مراجعة قيود اليومية", "تسوية الإيجارات (IFRS 16)", "تقدير المخصصات", "تجهيز ميزان المراجعة للإقفال"],
+      "site_keys": ["accounts.unearned_rent", "accounts.rental_income", "cost_centres"],
+      "uses": ["skill:cfo-cure-hanygameel (Lease Audit, IFRS, anomaly scripts)"],
+      "outputs": ["runs/<period>/gl-accountant/handoff.json"], "cadence": "monthly"
+    },
+    {
+      "id": "internal-auditor", "name_ar": "المراجع الداخلي", "name_en": "Internal Auditor",
+      "reports_to": "finance-manager", "kind": "independent", "color": "#ef4444",
+      "summary_ar": "يفحص المخرجات بشكل مستقل، بدون ما يشوف طريقة إعدادها.",
+      "responsibilities_ar": ["فحص عينات من كل ملف معتمد", "التحقق من الأرقام مقابل المصدر", "رفع تقرير مستقل للمدير المالي", "متابعة إغلاق الملاحظات"],
+      "uses": ["Cure MCP (re-query the source)"],
+      "outputs": ["runs/<period>/internal-auditor/audit.md"], "cadence": "after the Chief Accountant approves"
+    }
+  ]
+}

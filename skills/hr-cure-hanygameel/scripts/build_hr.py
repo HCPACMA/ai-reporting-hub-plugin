@@ -323,11 +323,26 @@ def build(ex, cfg, pb, notes=None, labels_ar=None, gosi=None, prepay=None, nursi
     if movement: D['movement'] = movement
     if movement and D.get('gosi'): D['gosiNats'] = movement['nats']; D['gosiBr'] = movement['branches']
     if salary: D['salary'] = salary
+    try:
+        _ss = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'salary_setup.json')
+        if os.path.exists(_ss): D['sset'] = json.load(open(_ss, encoding='utf8'))
+    except Exception as _e: print('salary setup not attached:', _e)
     if prepay: D['prepay'] = prepay
     if nursing: D['nursing'] = nursing
     if leavedays: D['leaveDays'] = leavedays
     if review: D['review'] = review
-    if commission: D['commission'] = commission
+    try:
+        import glob as _g
+        _ot = sorted(_g.glob(os.path.join(KIT, 'data', 'overtime.*.json')))
+        if _ot and review: D['otr'] = json.load(open(_ot[-1], encoding='utf8'))
+    except Exception as _e: print('overtime review not attached:', _e)
+    try:
+        _of = sorted(_g.glob(os.path.join(KIT, 'data', 'overtime_feas.*.json')))
+        if _of: D['otf'] = json.load(open(_of[-1], encoding='utf8'))
+    except Exception as _e: print('overtime feasibility not attached:', _e)
+    if commission:
+        cl = sorted(commission if isinstance(commission, list) else [commission], key=lambda c: c['month'])
+        D['commission'] = cl[-1]; D['commissions'] = {c['month']: c for c in cl}
     return D, F
 
 def render(D, template):
@@ -373,6 +388,8 @@ def gates(D):
         else:
             cur = pn['current']; openn = [x for x in pn['notes'] if x['status'] == 'open' and not x.get('closedIn') and x['month'] <= cur]
             msgs.append(f"ok payroll notes valid: {len(pn['notes'])} notes, {len(openn)} open in {cur}")
+            unv = [x['id'] for x in openn if x.get('vf', '') < pn.get('asOfReview', '')]
+            msgs.append(f"warn notes not re-verified in the review of {pn.get('asOfReview')}: {len(unv)} of {len(openn)} open ({', '.join(unv[:40])})")
     for ym, gt in (D.get('gosiBy') or {}).items():
         gs = gt['gosi']
         S = gs['summary']; bad = []
@@ -502,7 +519,7 @@ def main():
     ap.add_argument('--movement', default=os.path.join(KIT, 'data', 'movement.json'))
     ap.add_argument('--salary', default=os.path.join(KIT, 'data', 'salary.json'))
     ap.add_argument('--review', default=os.path.join(KIT, 'data', 'review_screens.json'))
-    ap.add_argument('--commission', default=os.path.join(KIT, 'data', 'commission.json'))
+    ap.add_argument('--commission', nargs='*', default=None)
     ap.add_argument('--out', default='out')
     a = ap.parse_args()
     ex = json.load(open(a.extract, encoding='utf8')); cfg = json.load(open(a.config, encoding='utf8')); pb = json.load(open(a.playbook, encoding='utf8'))
@@ -518,7 +535,8 @@ def main():
     review = json.load(open(a.review, encoding='utf8')) if os.path.exists(a.review) else None
     movement = json.load(open(a.movement, encoding='utf8')) if os.path.exists(a.movement) else None
     salary = json.load(open(a.salary, encoding='utf8')) if os.path.exists(a.salary) else None
-    commission = json.load(open(a.commission, encoding='utf8')) if os.path.exists(a.commission) else None
+    cf = a.commission if a.commission else sorted(__import__('glob').glob(os.path.join(KIT, 'data', 'commission*.json')))
+    commission = [json.load(open(f, encoding='utf8')) for f in cf if os.path.exists(f)] or None
     D, F = build(ex, cfg, pb, notes, labels, gosi, prepay, nursing, leavedays, review, movement, salary, commission)
     ok, msgs = gates(D)
     tpl = open(a.template, encoding='utf8').read()

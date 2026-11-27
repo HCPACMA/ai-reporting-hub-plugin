@@ -149,6 +149,22 @@ def main():
 
     wb = openpyxl.load_workbook(a.sheet, data_only=True)
     S = wb['اجمالى النسب']; B = wb['البيانات من الفروع']
+    RUL = {}
+    rp = os.path.join(a.raw, f'cm04_rules_{ym}.json')
+    if os.path.exists(rp): RUL = json.load(open(rp, encoding='utf8'))
+    doctors = []
+    if a.rules:
+        wf = openpyxl.load_workbook(a.sheet)
+        doctors = doctor_basis(wf, a.rules)
+    basis_of = {d_['s']: d_['basis'] for d_ in doctors}
+    # lab doctors per branch: the sheet rows of clinic 'المختبر'
+    labrows = collections.defaultdict(list)
+    for r_ in range(5, 112):
+        if S.cell(r_, 9).value is not None and str(S.cell(r_, 6).value or '').strip() == 'المختبر':
+            labrows[BR.get(str(S.cell(r_, 7).value or '').strip(), '')].append(r_)
+    labmain = {}
+    for b_, rs in labrows.items():
+        labmain[b_] = max(rs, key=lambda x: f(S.cell(x, 12).value) + f(S.cell(x, 13).value) - f(S.cell(x, 18).value))
     rows = []; seen = set()
     for r in range(5, 112):
         code = S.cell(r, 4).value; staff = S.cell(r, 9).value
@@ -163,29 +179,62 @@ def main():
         l = lv.get(staff, {'annual': 0, 'emerg': 0, 'other': 0, 'recs': []})
         seen.add(staff)
         iss = []
+        br_ = BR.get(str(S.cell(r, 7).value or '').strip(), '')
+        note_rules = []; skiprev = False
+        cup = RUL.get('cupping', {}).get(staff, 0)
+        if cup:
+            cashC = round(cashC - cup, 2); note_rules.append(I(f'Cupping revenue {cup:,.2f} removed from Cure cash (service names Cupping session)', f'تم طرح إيراد الحجامة {cup:,.2f} من كاش Cure (خدمات جلسة حجامة)'))
+        ov = RUL.get('rev_override', {}).get(staff)
+        if ov:
+            cashC, credC = ov['cash'], ov['cred']; note_rules.append(I(ov['en'], ov['ar']))
+        israd = staff in RUL.get('rad', {})
+        islab = str(S.cell(r, 6).value or '').strip() == 'المختبر' and br_ in RUL.get('lab', {})
+        if israd:
+            rd = RUL['rad'][staff]; cashC, credC = rd['cash'], rd['cred']
+            note_rules.append(I('Radiology revenue = services with a report written by this radiologist', 'إيراد الأشعة = الخدمات التي كتب هذا الطبيب تقريرها'))
+        if islab:
+            lb = RUL['lab'][br_]
+            if r == labmain[br_]:
+                cashC = round(lb['cash'] + lb['pkg'], 2); credC = lb['cred']
+                cashS = cashS - f(S.cell(r, 18).value)   # package revenue entered in the sheet as a negative refund
+                wn = lb.get('win')
+                note_rules.append(I(f'Lab revenue = branch laboratory services + package lab share {lb["pkg"]:,.2f}' + (f', only the days worked ({wn})' if wn else ''), f'إيراد المختبر = خدمات مختبر الفرع + حصة المختبر من الباقات {lb["pkg"]:,.2f}' + (f'، عن أيام عمله فقط ({wn})' if wn else '')))
+                if RUL.get('lab_note', {}).get(br_): note_rules.append(I(RUL['lab_note'][br_], RUL['lab_note'][br_]))
+            else:
+                skiprev = True
+        # cash-only doctors get no commission on insurance revenue: credit differences are not checked
+        shb = {d_['s']: d_['sheetBasis'] for d_ in doctors}.get(staff)
+        cashonly = (staff in RUL.get('cashonly', {}) or (basis_of.get(staff) == 'cash' and shb != 'cash_credit')) and not (islab or israd)
         sheet_tot, cure_tot = cashS + credS, cashC + credC
-        if sheet_tot > 1000 and cure_tot < 0.05 * sheet_tot:
+        if cashonly: note_rules.append(I('Paid on cash revenue only: credit revenue is not compared', 'تُحسب نسبته على الإيراد النقدي فقط: الآجل غير مقارن'))
+        if skiprev: pass
+        elif sheet_tot > 1000 and cure_tot < 0.05 * sheet_tot and not (israd or islab):
             # department doctors (lab, radiology, dental, prosthetics): revenue is not on the doctor's own invoices
             iss.append({'k': 'dept', 'sev': 'warn', 't': I(f'Sheet revenue {sheet_tot:,.2f} but Cure doctor invoices show {cure_tot:,.2f}: department revenue, verify against the cost-centre ledger {S.cell(r, 8).value}',
                                                            f'إيراد الشيت {sheet_tot:,.2f} بينما فواتير الطبيب في Cure {cure_tot:,.2f}: إيراد قسم، راجعه مع الأستاذ على مركز التكلفة {S.cell(r, 8).value}')})
         else:
-            for nm_en, nm_ar, s_, c_ in (('Cash', 'الكاش', cashS, cashC), ('Credit', 'الآجل', credS, credC)):
+            for nm_en, nm_ar, s_, c_ in (('Cash', 'الكاش', cashS, cashC),) + (() if cashonly else (('Credit', 'الآجل', credS, credC),)):
                 dlt = s_ - c_
                 if abs(dlt) > TOL:
-                    small = abs(dlt) <= 250
+                    small = abs(dlt) <= (max(250, 0.02 * abs(s_)) if (israd or islab) else 250)
                     iss.append({'k': 'rev', 'sev': 'warn' if small else 'bad',
                                 't': I(f'{nm_en} revenue in the sheet {s_:,.2f} vs Cure {c_:,.2f} (diff {dlt:+,.2f})',
                                        f'إيراد {nm_ar} في الشيت {s_:,.2f} مقابل Cure {c_:,.2f} (الفرق {dlt:+,.2f})')})
-        dcure = dim - l['annual']
+        dcure = dim - l['annual']   # commission days follow the actual days of the month (31 in October)
         dsheet = f(days) if days is not None else None
-        if dsheet is not None and abs(dsheet - dcure) > 0.01:
+        dok = RUL.get('days_ok', {}).get(staff)
+        if dok:
+            note_rules.append(I(dok['en'], dok['ar']))
+        if dsheet is not None and abs(dsheet - dcure) > 0.01 and not dok:
             iss.append({'k': 'days', 'sev': 'bad', 't': I(f'Working days in the sheet {dsheet:g} vs {dcure} from Cure ({dim} days minus {l["annual"]} annual leave)',
                                                           f'أيام العمل في الشيت {dsheet:g} والصحيح من Cure {dcure} ({dim} يوم ناقص {l["annual"]} إجازة سنوية)')})
-        if l['emerg']:
+        if l['emerg'] and not dok:
             iss.append({'k': 'emg', 'sev': 'warn', 't': I(f'{l["emerg"]} emergency-leave days in Cure, not deducted from working days (confirm policy)',
                                                           f'{l["emerg"]} يوم إجازة طارئة في Cure لم تُخصم من أيام العمل (تأكد من السياسة)')})
         p = pay.get(staff)
-        if p is None and comm > TOL:
+        if not pay:
+            pass   # commission not entered in the pay month yet: payment check is skipped
+        elif p is None and comm > TOL:
             iss.append({'k': 'pay', 'sev': 'bad', 't': I(f'Sheet commission {comm:,.2f} but no item 18 in the {pm} payroll', f'نسبة الشيت {comm:,.2f} ولا يوجد بند 18 في رواتب {pm}')})
         elif p is not None and abs(p - comm) > TOL:
             iss.append({'k': 'pay', 'sev': 'bad', 't': I(f'Payroll item 18 is {p:,.2f} vs sheet commission {comm:,.2f}', f'بند 18 في الرواتب {p:,.2f} مقابل نسبة الشيت {comm:,.2f}')})
@@ -195,7 +244,8 @@ def main():
                      'br': BR.get(str(S.cell(r, 7).value or '').strip(), str(S.cell(r, 7).value or '').strip()),
                      'ds': dsheet, 'dc': dcure, 'la': l['annual'], 'le': l['emerg'],
                      'cashS': round(cashS, 2), 'cashC': cashC, 'credS': round(credS, 2), 'credC': credC,
-                     'med': round(c['med'], 2), 'comm': round(comm, 2), 'pay': p, 'st': sev, 'iss': iss, 'cure_br': c['br']})
+                     'med': round(c['med'], 2), 'comm': round(comm, 2), 'pay': p, 'st': sev, 'iss': iss, 'cure_br': c['br'],
+                     'rules': note_rules, 'cashonly': cashonly})
     # Cure doctors with revenue that are not in the commission sheet, and branch rows the sheet ignores
     outside = []
     for s, c in cure.items():
@@ -216,10 +266,7 @@ def main():
             'days_issues': sum(any(i['k'] == 'days' for i in r['iss']) for r in rows),
             'pay_issues': sum(any(i['k'] == 'pay' for i in r['iss']) for r in rows),
             'unmatched_rows': len(unm), 'unmatched_amt': round(miss, 2), 'outside': len(outside), 'pay_orphan': len(pay_orphan)}
-    doctors = []
     if a.rules:
-        wf = openpyxl.load_workbook(a.sheet)
-        doctors = doctor_basis(wf, a.rules)
         sm = {r['s']: r for r in rows}
         for d_ in doctors:
             r_ = sm.get(d_['s'])
@@ -253,7 +300,7 @@ def write_xlsx(D, path):
     lab = {'bad': 'يحتاج إجراء', 'warn': 'ملاحظة', 'ok': 'سليم'}
     for i, r in enumerate(sorted(D['rows'], key=lambda x: ({'bad': 0, 'warn': 1, 'ok': 2}[x['st']], x['n'])), 5):
         vals = [r['c'], r['s'], r['n'], r['cl'], r['br'], r['ds'], r['dc'], r['cashS'], r['cashC'], r['credS'], r['credC'], None, None, r['comm'], r['pay'], lab[r['st']],
-                ' | '.join(x['t']['ar'] for x in r['iss'])]
+                ' | '.join([x['t']['ar'] for x in r['iss']] + ['ملحوظة: ' + x['ar'] for x in r.get('rules', [])])]
         for j, v in enumerate(vals, 1):
             c = ws.cell(i, j, v); c.font = Font(name='Arial', size=10); c.border = bd
         ws.cell(i, 12, f'=H{i}-I{i}'); ws.cell(i, 13, f'=J{i}-K{i}')

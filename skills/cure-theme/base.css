@@ -1,0 +1,90 @@
+/* ===== Cure skin — makes the page look like part of the Cure (EXSYS) system ===== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Cairo:wght@400;600;700&display=swap');
+:root{--cu-hd:58px;--cu-ft:30px}
+html:root:not([data-theme="dark"]){
+  --cu-bg:#F2F5F9;--cu-surf:#FFFFFF;--cu-surf2:#EFF2F6;--cu-surf3:#E5EBF2;--cu-line:#DCE3EC;
+  --cu-ink:#1B2B4B;--cu-mute:#55657D;--cu-faint:#8794A8;
+  --cu-blue:#0B6FBF;--cu-blue2:#3AA0F0;--cu-soft:#E7F1FC;--cu-th:#0B6FBF;
+  --cu-orange:#F5A623;--cu-red:#D7261E;--cu-green:#1E9E5A;
+  --cu-shadow:0 1px 2px rgba(16,42,84,.05),0 4px 14px rgba(16,42,84,.07);color-scheme:light}
+@media (prefers-color-scheme:dark){html:root:not([data-theme="light"]){
+  --cu-bg:#0E1626;--cu-surf:#152036;--cu-surf2:#1B2942;--cu-surf3:#22324F;--cu-line:#2A3B59;
+  --cu-ink:#E6EDF7;--cu-mute:#A3B2C9;--cu-faint:#7889A3;
+  --cu-blue:#3D8BFF;--cu-blue2:#62A8FF;--cu-soft:rgba(61,139,255,.16);--cu-th:#1D5FAF;
+  --cu-orange:#F5B24A;--cu-red:#FF6B61;--cu-green:#3ECF8E;
+  --cu-shadow:0 1px 2px rgba(0,0,0,.25),0 8px 24px rgba(0,0,0,.3);color-scheme:dark}}
+html:root[data-theme="dark"]{
+  --cu-bg:#0E1626;--cu-surf:#152036;--cu-surf2:#1B2942;--cu-surf3:#22324F;--cu-line:#2A3B59;
+  --cu-ink:#E6EDF7;--cu-mute:#A3B2C9;--cu-faint:#7889A3;
+  --cu-blue:#3D8BFF;--cu-blue2:#62A8FF;--cu-soft:rgba(61,139,255,.16);--cu-th:#1D5FAF;
+  --cu-orange:#F5B24A;--cu-red:#FF6B61;--cu-green:#3ECF8E;
+  --cu-shadow:0 1px 2px rgba(0,0,0,.25),0 8px 24px rgba(0,0,0,.3);color-scheme:dark}
+
+/* type */
+html body{font-family:'Roboto','Cairo',system-ui,-apple-system,'Segoe UI',sans-serif!important;padding-top:var(--cu-hd)!important;padding-bottom:var(--cu-ft)!important;background:var(--cu-bg)}
+html body h1,html body h2,html body h3,html body .display{font-family:'Roboto','Cairo',system-ui,sans-serif!important;letter-spacing:-.005em}
+[dir=rtl],[lang=ar]{font-family:'Cairo','Roboto',system-ui,sans-serif}
+
+/* tables: Cure blue header bar, white bold titles */
+html body thead th{background:var(--cu-th)!important;color:#fff!important;font-weight:600!important;text-transform:none!important;letter-spacing:.01em!important;border-bottom:0!important;border-inline-end:1px solid rgba(255,255,255,.16);padding-inline:10px!important}
+html body thead th :not(input):not(select):not(option):not(textarea){color:inherit!important}
+html body thead th svg{stroke:#fff}
+html body thead tr:first-child th:first-child{border-start-start-radius:6px}
+html body thead tr:first-child th:last-child{border-start-end-radius:6px;border-inline-end:0}
+html body tbody tr:hover>td{background-color:var(--cu-soft)}
+
+/* controls */
+html body input[type=search],html body input[type=text],html body input[type=number],html body input[type=date],html body input[type=month],html body select{border-radius:6px}
+html body input:focus-visible,html body select:focus-visible{outline:2px solid var(--cu-blue2)!important;outline-offset:1px}
+html body .btn.pri,html body .btn-primary,html body button.primary{background:linear-gradient(90deg,var(--cu-blue),var(--cu-blue2))!important;border-color:transparent!important;color:#fff!important}
+input[type=range],input[type=checkbox],input[type=radio]{accent-color:var(--cu-blue)}
+
+/* ===== Cure header ===== */
+#cure-hd{position:fixed;top:0;left:0;right:0;height:var(--cu-hd);z-index:60;display:flex;align-items:center;gap:18px;padding:0 22px;
+  background:var(--cu-surf);border-bottom:1px solid var(--cu-line);box-shadow:0 1px 6px rgba(16,42,84,.05);direction:ltr;
+  font:400 13.5px 'Roboto','Cairo',system-ui,sans-serif;color:var(--cu-ink)}
+#cure-hd .cu-logo{display:flex;align-items:center;gap:9px;flex:none;cursor:pointer;text-decoration:none}
+#cure-hd .cu-mark{position:relative;width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--cu-blue),var(--cu-blue2));flex:none}
+#cure-hd .cu-mark::before,#cure-hd .cu-mark::after{content:"";position:absolute;background:#fff;border-radius:2px;left:50%;top:50%;transform:translate(-50%,-50%)}
+#cure-hd .cu-mark::before{width:16px;height:5px}#cure-hd .cu-mark::after{width:5px;height:16px}
+#cure-hd .cu-mark i{position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--cu-orange);border:2px solid var(--cu-surf)}
+#cure-hd .cu-name b{display:block;font:900 20px/1 'Roboto',sans-serif;color:var(--cu-blue);letter-spacing:-.03em}
+#cure-hd .cu-name small{display:block;font-size:10.5px;color:var(--cu-mute);margin-top:2px;letter-spacing:.02em}
+#cure-hd .cu-bc{flex-direction:row;margin:0;flex:1;min-width:0;display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;padding-inline-start:16px;border-inline-start:1px solid var(--cu-line)}
+#cure-hd .cu-bc svg{width:17px;height:17px;flex:none;stroke:var(--cu-blue);fill:none;stroke-width:2}
+#cure-hd .cu-bc .s{color:var(--cu-faint)}
+#cure-hd .cu-bc .r{font-weight:700;color:var(--cu-ink)}
+#cure-hd .cu-bc .l{color:var(--cu-blue);overflow:hidden;text-overflow:ellipsis}
+#cure-hd .cu-bc .l[dir=rtl]{font-family:'Cairo','Roboto',sans-serif}
+#cure-hd .cu-search{position:relative;width:clamp(180px,24vw,400px);flex:none}
+#cure-hd .cu-search input{width:100%;height:36px;border:1px solid var(--cu-line);border-radius:20px;background:var(--cu-surf);color:var(--cu-ink);padding:0 38px 0 16px;font:inherit;box-shadow:0 2px 8px rgba(16,42,84,.05);outline:none}
+#cure-hd .cu-search input:focus{border-color:var(--cu-blue2);box-shadow:0 0 0 3px var(--cu-soft)}
+#cure-hd .cu-search svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--cu-blue);fill:none;stroke-width:2.2;pointer-events:none}
+#cure-hd .cu-res{display:none;position:absolute;top:42px;left:0;right:0;background:var(--cu-surf);border:1px solid var(--cu-line);border-radius:10px;box-shadow:var(--cu-shadow);max-height:60vh;overflow:auto;padding:6px}
+#cure-hd .cu-res.on{display:block}
+#cure-hd .cu-res button{display:flex;flex-direction:column;align-items:flex-start;width:100%;border:0;background:none;text-align:start;padding:7px 10px;border-radius:7px;cursor:pointer;color:var(--cu-ink);font:500 13px 'Roboto','Cairo',sans-serif}
+#cure-hd .cu-res button small{color:var(--cu-faint);font-size:11px;font-weight:400}
+#cure-hd .cu-res button:hover,#cure-hd .cu-res button.k{background:var(--cu-soft);color:var(--cu-blue)}
+#cure-hd .cu-res .nil{padding:10px;color:var(--cu-faint);font-size:12.5px}
+#cure-hd .cu-tools{display:flex;align-items:center;gap:12px;flex:none}
+#cure-hd .cu-ico{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:0;background:none;cursor:pointer;color:var(--cu-blue)}
+#cure-hd .cu-ico:hover{background:var(--cu-soft)}
+#cure-hd .cu-ico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#cure-hd .cu-pill{display:flex;align-items:center;gap:8px;border:1px solid var(--cu-line);border-radius:20px;padding:3px 12px 3px 4px;font-size:12.5px;color:var(--cu-mute)}
+#cure-hd .cu-av{width:28px;height:28px;border-radius:50%;background:var(--cu-soft);color:var(--cu-blue);display:grid;place-items:center;font:700 11.5px 'Roboto',sans-serif}
+#cure-hd .cu-pill b{color:var(--cu-ink);font-weight:500;font-family:'Cairo','Roboto',sans-serif}
+
+/* ===== Cure footer ===== */
+#cure-ft{position:fixed;left:0;right:0;bottom:0;height:var(--cu-ft);z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 22px;
+  background:var(--cu-surf);border-top:1px solid var(--cu-line);direction:ltr;font:400 12px 'Roboto','Cairo',sans-serif;color:var(--cu-mute)}
+#cure-ft .cu-org{color:var(--cu-blue);font-family:'Cairo','Roboto',sans-serif;font-weight:600;direction:rtl;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cure-ft .cu-mod b{color:var(--cu-ink);font-weight:500}
+#cure-ft .cu-tag{color:var(--cu-red);font-weight:700}
+
+@media (max-width:900px){
+  #cure-hd{gap:10px;padding:0 12px}
+  #cure-hd .cu-bc,#cure-hd .cu-pill b,#cure-hd .cu-name small{display:none}
+  #cure-hd .cu-search{flex:1;width:auto}
+  #cure-ft .cu-mod{display:none}
+}
+@media print{#cure-hd,#cure-ft{display:none!important}html body{padding:0!important}}

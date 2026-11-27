@@ -1,0 +1,113 @@
+{
+  "site": "alfaihaa",
+  "company_name_ar": "مجموعة الفيحاء",
+  "erp": "EXSYS (Cure)",
+  "read_only_db_user_confirmed": true,
+  "mcp_server": "Cure_MCP",
+  "branches": [
+    {
+      "key": "Riyadh",
+      "dsn": "EXSYS",
+      "schema_prefix": "EXSYS.",
+      "cost_centre": "001",
+      "name_ar": "الرياض"
+    },
+    {
+      "key": "BUR1",
+      "dsn": "FY2",
+      "schema_prefix": "",
+      "cost_centre": "002",
+      "name_ar": "بريدة 1"
+    },
+    {
+      "key": "BUR2",
+      "dsn": "FY3",
+      "schema_prefix": "",
+      "cost_centre": "003",
+      "name_ar": "بريدة 2"
+    },
+    {
+      "key": "Rafha",
+      "dsn": "FY4",
+      "schema_prefix": "",
+      "cost_centre": "004",
+      "name_ar": "رفحاء"
+    }
+  ],
+  "cost_centres": {
+    "000": "Head office",
+    "001": "Riyadh",
+    "002": "Buraydah 1",
+    "003": "Buraydah 2",
+    "004": "Rafha"
+  },
+  "cancelled_status": "C",
+  "accounts": {
+    "ar_insurance_control": "1240007",
+    "ap_suppliers_control": "2122001",
+    "vat_output": "21230071",
+    "vat_input": "1263000",
+    "unearned_rent": "2123001",
+    "rental_income": "4300003",
+    "drug_margin_revenue": "4200027",
+    "employee_dues_payable": "2121001",
+    "employee_dues_misc": "2121009",
+    "vat_settlement": "21230072",
+    "vat_parent": "2123007"
+  },
+  "nphies_branches": [
+    "Rafha"
+  ],
+  "inventory": {
+    "cost_source_branch": "Riyadh"
+  },
+  "vat": {
+    "return_frequency": "monthly",
+    "summary_invoice_from": "2026-09",
+    "monthly_closing_jv_text": "اقفال ضريبة",
+    "reconciliation_method": "CFO-Cure-Kit/SPEC.md §3 + sql/vat_return_monthly.sql, tb_movements_monthly.sql, vat_recon_adjustments.sql, vat_gl.sql"
+  },
+  "folders": {
+    "hub_root": "D:/Financial Management/Financial Report/AI Reporting HUB",
+    "runs": "Finance-Dept/runs",
+    "supplier_statements": "R:/Accounts Section Riyadh/Accounts Works/الموردين",
+    "hr_letters": "Riyadh accounts share > Payroll > القرارت الادارية والأجازات",
+    "doctor_commission": "Riyadh accounts share > Payroll > النسب",
+    "settlements": "Y:/مخالصات الشركات من 2021",
+    "costing_map": "Financial/Costing/ER & Lab Costing Map.xlsx",
+    "bulk_transfer_template": "Financial/bulk_transfer.csv"
+  },
+  "rules_dir": "rules/alfaihaa",
+  "suppliers_prior_approval": [
+    {
+      "code": "S0116",
+      "name": "AME"
+    },
+    {
+      "code": "M0002",
+      "name": "More Care"
+    },
+    {
+      "code": "S0161",
+      "name": "البرج للمختبرات الطبية"
+    }
+  ],
+  "language": "ar",
+  "voucher_prefix_branch": {
+    "BR1": "Riyadh",
+    "BR2": "BUR1",
+    "BR3": "BUR2",
+    "BR4": "Rafha",
+    "JV1": "Riyadh",
+    "JV2": "BUR1",
+    "JV3": "BUR2",
+    "JV4": "Rafha"
+  },
+  "voucher_created_date_source": "VOUCHER_MASTERS / CM_VOUCHER_MASTER creation date",
+  "ap": {
+    "default_credit_term_codes": [
+      "844"
+    ],
+    "default_credit_note": "15 days (code 844) and the 30-day creation default are Cure defaults, not agreed terms"
+  }
+}

@@ -26,3 +26,14 @@ and `DATA.m` (`scripts/build_monthly_buckets.py --closed=<window start>`), and f
 before the window moved.
 
 Cure skin (7 Nov 2026): `build` re-applies templates/cure_skin.html (from _theme/cure) to the Desk on every run.
+
+AI Finance Department tab (21 Nov 2026): the Desk loads `fin-dept.js` (published beside index.html) from one include
+`<!--FIN-DEPT:start -->…<!--FIN-DEPT:end -->`. Before republishing a local copy of the page, run
+`python3 ../../Finance-Agents-Kit/scripts/desk_fin_include.py <page>` so the tab is not dropped. Its data is refreshed by the
+finance department runs (Finance-Agents-Kit), not by this refresh.
+
+Local copies (rule from Hany, 21 Nov 2026): every time the Desk or the Demo Desk is published, save the same files
+locally — live: `Financial\AlFaihaa_Modeling_Desk.html` + its side files (fin-dept.js, fin-office.html, ar-*.js, cure-skin-desk.js);
+demo: `Demo\Demo_Modeling_Desk.html` and `Financial\Demo\Demo_Modeling_Desk.html` + side files. Publish FROM these local files
+(write locally first, then publish_files), so the folders are never older than the live pages.
+Self-contained page: run `python3 ../../Finance-Agents-Kit/scripts/make_standalone.py <page>` on the saved local page so one copied file works on another computer (inlines the side .js files and the 3D office; lists any side file that is missing).

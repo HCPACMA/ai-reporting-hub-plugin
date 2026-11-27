@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>الإدارة المالية بالذكاء الاصطناعي — المكتب والهيكل الوظيفي</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1220;--panel:#111a2e;--line:#23304d;--text:#e5e7eb;--muted:#94a3b8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif}
+header{padding:20px 20px 8px;max-width:1200px;margin:0 auto}
+h1{margin:0;font-size:24px}
+.sub{color:var(--muted);margin:4px 0 0;font-size:14px}
+.wrap{max-width:1200px;margin:0 auto;padding:12px 20px 40px}
+.office{display:grid;grid-template-columns:1fr 300px;gap:14px}
+#stage{position:relative;height:calc(100vh - 150px);min-height:420px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#0b1220}
+#stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.tools{position:absolute;top:10px;inset-inline-start:10px;display:flex;gap:6px;flex-wrap:wrap}
+.nav3d{position:absolute;bottom:46px;inset-inline-end:10px;display:grid;grid-template-columns:repeat(3,40px);gap:5px;direction:ltr;z-index:3}
+.nav3d button{width:40px;height:40px;border-radius:10px;background:rgba(15,23,42,.88);color:#e5e7eb;border:1px solid var(--line);font:600 17px/1 system-ui;cursor:pointer;touch-action:manipulation;user-select:none}
+.nav3d button:hover{border-color:#3b82f6}.nav3d button:active{background:#1e3a8a}
+.nav3d .sp{visibility:hidden}
+#stage:fullscreen{border-radius:0;height:100vh}
+.btn{background:rgba(15,23,42,.85);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer}
+.btn:hover{border-color:#3b82f6}
+.hint{position:absolute;bottom:10px;inset-inline-start:10px;font-size:12px;color:var(--muted);background:rgba(15,23,42,.75);padding:5px 9px;border-radius:8px}
+.log{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;min-height:0;height:calc(100vh - 150px);min-height:420px}
+.log h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+.live{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+#logList{list-style:none;margin:0;padding:0;overflow:auto;flex:1}
+#logList li{font-size:13px;line-height:1.55;padding:8px 0;border-bottom:1px solid var(--line);animation:fadein .4s}
+#logList li .t{color:var(--muted);font-size:11px;display:block}
+#logList li .d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px}
+@keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.stat{background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.stat b{display:block;font-size:18px}
+.stat span{font-size:11px;color:var(--muted)}
+h2{font-size:20px;margin:34px 0 4px}
+.org{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 14px}
+.lvl{display:flex;justify-content:center;align-items:center;gap:0;flex-wrap:wrap}
+.node{background:#0b1220;border:1px solid var(--line);border-top:4px solid var(--c);border-radius:14px;padding:10px 14px;min-width:160px;text-align:center;cursor:pointer;transition:transform .15s,border-color .15s}
+.node:hover{transform:translateY(-2px);border-color:var(--c)}
+.node b{display:block;font-size:14px}
+.node small{color:var(--muted);font-size:12px}
+.node.big{min-width:210px;padding:14px}
+.node.big b{font-size:16px}
+.dash{width:46px;border-top:2px dashed #475569;position:relative}
+.dash span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
+.v{width:2px;height:26px;background:#334155;margin:0 auto}
+.h{height:2px;background:#334155;margin:0 auto;width:84%}
+.team{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:0}
+.team .col{display:flex;flex-direction:column;align-items:stretch}
+.team .node{min-width:0}
+.controls{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:18px;font-size:12px;color:var(--muted)}
+.controls span::before{content:'✓ ';color:#22c55e}
+#sheet{position:fixed;inset-inline:0;bottom:0;max-width:560px;margin:0 auto;background:#0f172a;border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;padding:18px 20px 24px;transform:translateY(105%);transition:transform .3s ease;z-index:20;max-height:78vh;overflow:auto;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+#sheet.open{transform:translateY(0)}
+#sheet .bar{height:5px;border-radius:5px;margin-bottom:12px}
+#sheet h3{margin:0;font-size:20px}
+#sheet .rep{color:var(--muted);font-size:13px;margin-top:2px}
+#sheet p{font-size:14px;line-height:1.7}
+#sheet h4{margin:14px 0 6px;font-size:14px;color:#cbd5e1}
+#sheet ul{margin:0;padding-inline-start:20px;font-size:14px;line-height:1.8}
+#sheet .now{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:13px;margin-top:12px}
+#sheet .close{position:absolute;top:12px;inset-inline-end:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;background:#0b1220;border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+@media (max-width:900px){
+ .office{grid-template-columns:1fr}
+ .log{height:auto;max-height:340px}
+ #stage{height:58vh}
+ .team{grid-template-columns:repeat(3,1fr)}
+ .h{display:none}
+}
+@media (max-width:520px){.team{grid-template-columns:repeat(2,1fr)}.node.big{min-width:150px}.dash{width:24px}}
+</style>
+</head>
+<body>
+<header>
+ <h1>الإدارة المالية بالذكاء الاصطناعي</h1>
+ <p class="sub">AI Reporting HUB · قسم مالي كامل من وكلاء، كل واحد بوصف وظيفي ومسؤوليات، بصلاحية قراءة فقط</p>
+</header>
+<div class="wrap">
+ <div class="office">
+  <div id="stage">
+   <div class="tools">
+    <button class="btn" id="pauseBtn" type="button">⏸ إيقاف الحركة</button>
+    <button class="btn" id="resetBtn" type="button">⟲ الكاميرا</button>
+    <button class="btn" id="modeBtn" type="button">🎬 أكتوبر 2026 الفعلي</button>
+   </div>
+   <div class="nav3d" aria-label="تحكم الكاميرا">
+    <button type="button" data-a="tiltUp" title="إمالة لأعلى">▲</button><button type="button" data-a="in" title="تكبير">＋</button><button type="button" data-a="fit" title="ملاءمة الشاشة">⤢</button>
+    <button type="button" data-a="rotL" title="تدوير يسار">⟲</button><button type="button" data-a="out" title="تصغير">－</button><button type="button" data-a="rotR" title="تدوير يمين">⟳</button>
+    <button type="button" data-a="tiltDn" title="إمالة لأسفل">▼</button><button type="button" data-a="full" title="ملء الشاشة">⛶</button><button type="button" class="sp"></button>
+    <button type="button" data-a="panL" title="تحريك يسار">◀</button><button type="button" data-a="panF" title="تحريك للأمام">⬆</button><button type="button" data-a="panR" title="تحريك يمين">▶</button>
+    <button type="button" class="sp"></button><button type="button" data-a="panB" title="تحريك للخلف">⬇</button><button type="button" class="sp"></button>
+   </div>
+   <div class="hint">اسحب للتدوير · Ctrl + العجلة للتكبير · الأزرار للتحكم · اضغط على أي موظف لعرض وصفه</div>
+  </div>
+  <aside class="log">
+   <h3><span class="live"></span><span id="logTitle">تشغيل أكتوبر 2026 الفعلي</span></h3>
+   <ul id="logList"></ul>
+   <div class="stats">
+    <div class="stat"><b id="sDone">0</b><span>ملفات سُلّمت</span></div>
+    <div class="stat"><b id="sOk">0</b><span>اعتُمدت</span></div>
+    <div class="stat"><b id="sBack">0</b><span>أُرجعت</span></div>
+   </div>
+  </aside>
+ </div>
+
+ <h2>الهيكل الوظيفي</h2>
+ <p class="sub" style="margin-bottom:12px">اضغط على أي وظيفة لعرض الوصف الوظيفي والمسؤوليات</p>
+ <div class="org" id="org"></div>
+</div>
+
+<div id="sheet" role="dialog" aria-modal="false">
+ <button class="btn close" id="closeSheet" type="button">✕</button>
+ <div class="bar" id="shBar"></div>
+ <h3 id="shTitle"></h3>
+ <div class="rep" id="shRep"></div>
+ <p id="shSum"></p>
+ <h4>المسؤوليات</h4>
+ <ul id="shResp"></ul>
+ <h4>مصادر البيانات</h4>
+ <div class="chips" id="shData"></div>
+ <h4>المخرجات</h4>
+ <div id="shOut" style="font-size:14px"></div>
+ <div class="now" id="shNow"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const ROLES = {
+ cfo:{name:'المدير المالي',short:'المدير المالي',color:'#3b82f6',reports:'مجلس الإدارة',
+  summary:'يقود الإدارة المالية: يستقبل الطلبات، يوزعها على الفريق، ويراجع المخرجات النهائية قبل رفعها للإدارة العليا.',
+  resp:['توزيع المهام على رئيس الحسابات والمحاسبين','مراجعة المخرجات النهائية واعتمادها','إعداد تقرير مجلس الإدارة والتوصيات','متابعة مؤشرات الإقفال الشهري','تصعيد الملاحظات الجوهرية'],
+  data:['ملخصات رئيس الحسابات','تقرير المراجع الداخلي','CFO Modeling Desk'],output:'تقرير مجلس الإدارة · قرار نهائي على كل ملف',
+  tasks:['يراجع ملخص الإقفال الشهري','يعدّ تقرير مجلس الإدارة']},
+ chief:{name:'رئيس الحسابات',short:'رئيس الحسابات',color:'#8b5cf6',reports:'المدير المالي',
+  summary:'يشرف على المحاسبين ويطبّق مبدأ المُعِد والمراجع: ما يطلع ملف من القسم بدون مراجعته.',
+  resp:['مراجعة شغل كل محاسب مقابل القواعد الثابتة','اعتماد إقفال الشهر','إرجاع الملاحظات للمحاسب مع السبب','التأكد إن كل ملاحظة معها دليل (رقم قيد أو فاتورة)','رفع الملخص للمدير المالي'],
+  data:['مخرجات المحاسبين','Cure (قراءة فقط)','ملفات القواعد الثابتة'],output:'ملف معتمد، أو مُرجَع مع ملاحظات',
+  tasks:['يراجع الملفات الواردة من المحاسبين']},
+ ar:{name:'محاسب الذمم المدينة والتأمين',short:'الذمم المدينة',color:'#10b981',reports:'رئيس الحسابات',
+  summary:'مسؤول عن مستحقات شركات التأمين ومطابقتها مع الأستاذ العام.',
+  resp:['مراجعة دفعات شركات التأمين على حساب 1240007','إعداد كشوف حساب شركات التأمين','مطابقة المخالصات مع الأستاذ','متابعة مطالبات NPHIES والمرفوضات'],
+  data:['Cure: الإيصالات والفواتير','خطابات المخالصات','NPHIES'],output:'كشف حساب + قائمة فروقات بالأدلة',
+  tasks:['راجع دفعات التأمين على حساب 1240007','طابق مخالصة شركة تأمين مع الأستاذ','حدّث كشف حساب شركة تأمين']},
+ ap:{name:'محاسب الموردين',short:'الموردين',color:'#06b6d4',reports:'رئيس الحسابات',
+  summary:'يطابق كشوف حساب الموردين ويجهّز المستحقات للدفع.',
+  resp:['مطابقة كشف حساب كل مورد مع الأستاذ','تصنيف الفواتير المستحقة','تجهيز ملف التحويل البنكي الجماعي','متابعة الفروقات مع الموردين'],
+  data:['Cure: حسابات الموردين','كشوف الموردين'],output:'تقرير مطابقة + ملف التحويل البنكي',
+  tasks:['طابق كشف حساب مورد مع الأستاذ','جهّز ملف التحويل البنكي للمستحقات']},
+ vat:{name:'محاسب الضريبة',short:'الضريبة',color:'#f59e0b',reports:'رئيس الحسابات',
+  summary:'مسؤول عن الإقرار الضريبي والفاتورة الإلكترونية.',
+  resp:['إعداد ومطابقة الإقرار الضريبي','توزيع فواتير التأمين المجمّعة على الأشهر','مراجعة الإشعارات الدائنة','متابعة ردود ZATCA على الفواتير'],
+  data:['Cure: المبيعات والمشتريات','بوابة ZATCA'],output:'ورقة مطابقة الإقرار + قائمة تعديلات',
+  tasks:['طابق الإقرار الضريبي الشهري','فحص ردود ZATCA على الفواتير']},
+ payroll:{name:'محاسب الرواتب',short:'الرواتب',color:'#ec4899',reports:'رئيس الحسابات',
+  summary:'يراجع الرواتب والقرارات الإدارية ونسب الأطباء.',
+  resp:['مراجعة القرارات الإدارية وخطابات الإجازات مقابل Cure','مطابقة اشتراكات GOSI','احتساب نسب الأطباء الشهرية','مراجعة السلف والاستقطاعات'],
+  data:['Cure: الرواتب والموظفين','خطابات شؤون الموظفين','GOSI'],output:'تقرير مراجعة الرواتب + جدول النسب',
+  tasks:['راجع خطابات شؤون الموظفين مقابل Cure','احتسب نسب الأطباء للشهر','طابق اشتراكات GOSI']},
+ cost:{name:'محاسب التكاليف والمخزون',short:'التكاليف',color:'#84cc16',reports:'رئيس الحسابات',
+  summary:'يحسب تكلفة الخدمة ويدقق حركات المخزون.',
+  resp:['تحديث خريطة تكلفة الخدمة (الطوارئ والمختبر)','تدقيق حركات المخزون والجرد','ربط الخدمات بأصناف المخزون','تحليل هامش الخدمة'],
+  data:['Cure: المخزون والخدمات والتسعيرة'],output:'تكلفة الخدمة + ملاحظات المخزون',
+  tasks:['حدّث تكلفة خدمات المختبر','دقّق حركات المخزون']},
+ gl:{name:'محاسب الأستاذ العام',short:'الأستاذ العام',color:'#94a3b8',reports:'رئيس الحسابات',
+  summary:'يجهّز القيود والتسويات وميزان المراجعة للإقفال.',
+  resp:['مراجعة قيود اليومية','تسوية الإيجارات (IFRS 16)','تقدير المخصصات','تجهيز ميزان المراجعة للإقفال'],
+  data:['Cure: الأستاذ العام والقيود'],output:'ميزان مراجعة جاهز للإقفال',
+  tasks:['راجع قيود اليومية','سوّى الإيجارات والمخصصات']},
+ audit:{name:'المراجع الداخلي',short:'المراجع الداخلي',color:'#ef4444',reports:'المدير المالي (مستقل)',
+  summary:'يفحص المخرجات بشكل مستقل، بدون ما يشوف طريقة إعدادها، عشان ما يكون الموظف يراجع نفسه.',
+  resp:['فحص عينات من كل ملف معتمد','التحقق من الأرقام مقابل المصدر','رفع تقرير مستقل للمدير المالي','متابعة إغلاق الملاحظات'],
+  data:['المخرجات النهائية','Cure (قراءة فقط)'],output:'تقرير مراجعة مستقل',
+  tasks:['يتجول ويفحص عينة مستقلة']}
+};
+const ACCT = ['ar','ap','vat','payroll','cost','gl'];
+const POS = {cfo:[0,-8.6],chief:[0,-2.4],ar:[-2,2.35],ap:[0,2.35],vat:[2,2.35],payroll:[-2,3.45],cost:[0,3.45],gl:[2,3.45],audit:[9,-3.4]};
+const FACING_UP = {ar:1,ap:1,vat:1}; // back row of the bench, turned to face the planter
+const nowTask = {}; Object.keys(ROLES).forEach(k=>nowTask[k]=ROLES[k].tasks[0]);
+
+/* ---------- Org chart ---------- */
+function nodeHTML(id,big){const r=ROLES[id];return `<div class="node${big?' big':''}" style="--c:${r.color}" data-id="${id}"><b>${r.name}</b><small>يرفع إلى: ${r.reports}</small></div>`}
+document.getElementById('org').innerHTML =
+ `<div class="lvl">${nodeHTML('cfo',true)}<div class="dash"><span>تقرير مستقل</span></div>${nodeHTML('audit')}</div>
+  <div class="v"></div><div class="lvl">${nodeHTML('chief',true)}</div><div class="v"></div><div class="h"></div>
+  <div class="team">${ACCT.map(id=>`<div class="col"><div class="v"></div>${nodeHTML(id)}</div>`).join('')}</div>
+  <div class="controls"><span>صلاحية قراءة فقط</span><span>المُعِد والمراجع</span><span>كل ملاحظة معها دليل</span><span>لا ترحيل ولا اعتماد في Cure</span></div>`;
+document.querySelectorAll('.node').forEach(n=>n.addEventListener('click',()=>{openSheet(n.dataset.id);focusRole(n.dataset.id);document.getElementById('stage').scrollIntoView({behavior:'smooth',block:'center'})}));
+
+/* ---------- Info sheet ---------- */
+const sheet=document.getElementById('sheet'); let sheetRole=null;
+function openSheet(id){const r=ROLES[id];sheetRole=id;
+ shBar.style.background=r.color;shTitle.textContent=r.name;shRep.textContent='يرفع إلى: '+r.reports;shSum.textContent=r.summary;
+ shResp.innerHTML='';r.resp.forEach(x=>{const li=document.createElement('li');li.textContent=x;shResp.appendChild(li)});
+ shData.innerHTML='';r.data.forEach(x=>{const s=document.createElement('span');s.className='chip';s.textContent=x;shData.appendChild(s)});
+ shOut.textContent=r.output;updateNow();sheet.classList.add('open');selectRole(id)}
+function updateNow(){if(sheetRole)shNow.textContent='🟢 يعمل الآن على: '+nowTask[sheetRole]}
+closeSheet.onclick=()=>{sheet.classList.remove('open');sheetRole=null;selectRole(null)};
+
+/* ---------- 3D ---------- */
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.95;
+stage.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x1b1d21);scene.fog=new THREE.Fog(0x1b1d21,34,64);
+const camera=new THREE.PerspectiveCamera(42,1,0.1,200);
+const CAM0=new THREE.Vector3(15,14,17),TGT0=new THREE.Vector3(0,0.6,-0.8);
+camera.position.copy(CAM0);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.target.copy(TGT0);controls.enableDamping=true;controls.enableZoom=false;controls.maxPolarAngle=Math.PI*0.46;controls.minDistance=4;controls.maxDistance=42;
+controls.autoRotate=true;controls.autoRotateSpeed=0.35;
+controls.addEventListener('start',()=>{controls.autoRotate=false;camTween=null});
+
+scene.add(new THREE.HemisphereLight(0xfff4e6,0x3a332c,0.55));
+const sun=new THREE.DirectionalLight(0xfff1dd,0.7);sun.position.set(9,18,8);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-16,right:16,top:16,bottom:-16,near:1,far:50});sun.shadow.bias=-0.0005;scene.add(sun);
+const warm=new THREE.PointLight(0xffd8a8,0.6,14);warm.position.set(0,3.6,-7.5);scene.add(warm);
+
+const M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.7,metalness:.05},o));
+function box(w,h,d,mat,x=0,y=0,z=0,parent){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;if(parent)parent.add(m);return m}
+
+// floor & rooms — modern office: concrete floor, walnut slat wall, black-framed glass, linear pendants
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(28,24),M(0x8f8c87,{roughness:.45,metalness:.08}));floor.rotation.x=-Math.PI/2;floor.position.z=-0.5;floor.receiveShadow=true;scene.add(floor);
+const BLACK=M(0x141414,{metalness:.6,roughness:.35});
+// left wall (painted) — holds the dashboard
+box(0.25,4.2,24,M(0xd9d6d0),-14,2.1,-0.5,scene);
+// right wall: walnut slats on a dark backing
+box(0.2,4.2,24,M(0x2b1a10),14.1,2.1,-0.5,scene);
+(function(){const n=128,geo=new THREE.BoxGeometry(.09,4.2,.07),mat=M(0xa0623a,{roughness:.6});
+ const im=new THREE.InstancedMesh(geo,mat,n),d=new THREE.Object3D();
+ for(let i=0;i<n;i++){d.position.set(13.96,2.1,-12.2+i*0.185);d.updateMatrix();im.setMatrixAt(i,d.matrix)}
+ im.castShadow=im.receiveShadow=true;scene.add(im)})();
+// back wall: glass curtain wall with black mullions and night greenery outside
+const outside=new THREE.Mesh(new THREE.PlaneGeometry(28,4.2),M(0x2f4a3a,{emissive:0x1f3b2c,emissiveIntensity:.55,roughness:1}));outside.position.set(0,2.1,-12.7);scene.add(outside);
+const glassBack=new THREE.Mesh(new THREE.PlaneGeometry(28,4.2),new THREE.MeshStandardMaterial({color:0x9fb8c8,transparent:true,opacity:.18,roughness:.05,metalness:.3}));glassBack.position.set(0,2.1,-12.45);scene.add(glassBack);
+for(let x=-14;x<=14;x+=2.8)box(.07,4.2,.07,BLACK,x,2.1,-12.42,scene);
+box(28,.07,.07,BLACK,0,4.17,-12.42,scene);box(28,.07,.07,BLACK,0,.04,-12.42,scene);
+for(let i=0;i<7;i++){const t=new THREE.Mesh(new THREE.ConeGeometry(.6+Math.random()*.4,2+Math.random(),7),M(0x2e5b3c,{flatShading:true}));t.position.set(-12+i*4,1.2,-13.6);scene.add(t)}
+// CFO glass office — black frames
+const glass=new THREE.MeshStandardMaterial({color:0xb7c9d6,transparent:true,opacity:.14,roughness:.05,metalness:.3});
+const frame=BLACK;
+[[-2.8,-5.2,2.4],[2.8,-5.2,2.4]].forEach(([x,z,w])=>{const g=new THREE.Mesh(new THREE.BoxGeometry(w,2.8,0.04),glass);g.position.set(x,1.4,z);scene.add(g);
+ box(w,.06,.06,frame,x,2.8,z,scene);box(w,.06,.06,frame,x,.03,z,scene);for(let k=-1;k<=1;k+=2)box(.05,2.8,.06,frame,x+k*w/2,1.4,z,scene)});
+[-4,4].forEach(x=>{const g=new THREE.Mesh(new THREE.BoxGeometry(0.04,2.8,7.2),glass);g.position.set(x,1.4,-8.8);scene.add(g);
+ box(.06,.06,7.2,frame,x,2.8,-8.8,scene);box(.06,.06,7.2,frame,x,.03,-8.8,scene);for(let z=-12.4;z<=-5.2;z+=1.8)box(.06,2.8,.05,frame,x,1.4,z,scene)});
+const rug=new THREE.Mesh(new THREE.PlaneGeometry(7.6,6.8),M(0x3a3f45,{roughness:1}));rug.rotation.x=-Math.PI/2;rug.position.set(0,0.012,-8.8);rug.receiveShadow=true;scene.add(rug);
+
+// linear pendant lights (black bar, warm glowing underside, two cables)
+function pendant(x,z,len,rot=0){const g=new THREE.Group();g.position.set(x,2.95,z);g.rotation.y=rot;
+ box(len,.07,.16,BLACK,0,0,0,g);
+ const glow=new THREE.Mesh(new THREE.PlaneGeometry(len-.06,.11),new THREE.MeshBasicMaterial({color:0xffe6c2}));glow.rotation.x=Math.PI/2;glow.position.y=-.037;g.add(glow);
+ [-len/2+.4,len/2-.4].forEach(cx=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(.006,.006,1.3,4),BLACK);c.position.set(cx,.68,0);g.add(c);
+  const cap=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,.08,12),BLACK);cap.position.set(cx,1.33,0);g.add(cap)});
+ const l=new THREE.PointLight(0xffd9a8,.42,7,2);l.position.set(0,-.2,0);g.add(l);
+ scene.add(g);return g}
+pendant(0,1.9,5.6);pendant(0,3.9,5.6);pendant(0,-2.4,3);pendant(0,-8.6,3.2);pendant(9,-3.4,2.4,Math.PI/2);
+
+// plants: leafy clusters in planters
+const LEAF=[0x2f7d3b,0x3c9a48,0x4fae57,0x276b33];
+function foliage(parent,cx,cy,cz,spread,count,size){for(let i=0;i<count;i++){
+ const f=new THREE.Mesh(new THREE.SphereGeometry(size*(.6+Math.random()*.5),7,5),M(LEAF[i%LEAF.length],{flatShading:true,roughness:.8}));
+ f.scale.set(1.3,.55+Math.random()*.4,.8);f.rotation.set(Math.random()*.6,Math.random()*Math.PI,Math.random()*.6);
+ f.position.set(cx+(Math.random()-.5)*spread,cy+Math.random()*size*1.6,cz+(Math.random()-.5)*spread*.5);f.castShadow=true;parent.add(f)}}
+function plant(x,z,s=1){const g=new THREE.Group();box(.7*s,.75*s,.7*s,M(0x4b5057,{roughness:.6}),0,.375*s,0,g);foliage(g,0,.85*s,0,.7*s,9,.32*s);g.position.set(x,0,z);scene.add(g);return g}
+// bench planter between the facing desks (on the desk tops, like the photo)
+const benchPlanter=new THREE.Group();box(5.9,.32,.3,M(0x9aa0a6,{roughness:.55}),0,.95,0,benchPlanter);foliage(benchPlanter,0,1.12,0,5.6,34,.22);benchPlanter.position.set(0,0,2.9);scene.add(benchPlanter);
+const plants=[plant(-12.8,-11.3,1.3),plant(12.6,-11.3,1.3),plant(-3.3,-11.4),plant(3.3,-11.4),plant(-12.8,7.5,1.2),plant(12.6,7.5,1.1),plant(5.6,-2.4,.8),benchPlanter];
+
+// screen canvases
+function makeScreen(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return{c,ctx:c.getContext('2d'),tex:t}}
+function drawScreen(s,color,flash){const{ctx,c}=s,W=c.width,H=c.height;ctx.fillStyle=flash?color:'#0f172a';ctx.fillRect(0,0,W,H);
+ if(flash){ctx.fillStyle='#fff';ctx.font='bold 64px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(flash,W/2,H/2+4)}
+ else{ctx.fillStyle=color;ctx.globalAlpha=.9;ctx.fillRect(0,0,W,12);ctx.globalAlpha=1;
+  for(let i=0;i<7;i++){const bh=12+Math.random()*(H-50);ctx.globalAlpha=.55+.45*Math.random();ctx.fillRect(14+i*33,H-12-bh,22,bh)}
+  ctx.globalAlpha=1;ctx.strokeStyle='#e2e8f0';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<8;i++){const y=30+Math.random()*(H-60);i?ctx.lineTo(10+i*34,y):ctx.moveTo(10,y)}ctx.stroke()}
+ s.tex.needsUpdate=true}
+
+// desk: wood top, dark steel frame, drawer pedestal, silver all-in-one monitor, black mesh chair
+function makeDesk(id,x,z,s=1,rot=0){const r=ROLES[id],g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;
+ const W=1.9*s,D=.9*s,top=M(id==='cfo'?0x6b4a2f:0xa87447,{roughness:.55}),steel=M(0x26303b,{metalness:.55,roughness:.4});
+ box(W,.05,D,top,0,.765,0,g);
+ [-1,1].forEach(k=>{box(.05,.74,.05,steel,k*(W/2-.05),.37,-D/2+.05,g);box(.05,.74,.05,steel,k*(W/2-.05),.37,D/2-.05,g);
+  box(.05,.05,D-.1,steel,k*(W/2-.05),.72,0,g);box(.05,.05,D-.1,steel,k*(W/2-.05),.03,0,g)});
+ box(W-.1,.05,.05,steel,0,.72,-D/2+.05,g);
+ const ped=M(0x2c3744,{roughness:.5});box(.44,.66,D-.12,ped,W/2-.32,.35,-.02,g);
+ [.5,.33].forEach(y=>box(.40,.006,.006,M(0x161c24),W/2-.32,y,D/2-.08,g));
+ if(id==='cfo')box(W,.62,.04,ped,0,.4,-D/2+.04,g);
+ // silver all-in-one monitor
+ const silver=M(0xd7d8db,{metalness:.7,roughness:.3});
+ box(.22,.012,.17,silver,0,.795,-.22,g);box(.05,.26,.03,silver,0,.92,-.26,g);
+ box(.82,.56,.03,silver,0,1.18,-.245,g);
+ const scr=makeScreen(256,150);drawScreen(scr,r.color);
+ const disp=new THREE.Mesh(new THREE.PlaneGeometry(.76,.42),new THREE.MeshBasicMaterial({map:scr.tex}));disp.position.set(0,1.2,-.228);g.add(disp);
+ box(.46,.012,.14,M(0xeeeeee),0,.796,.1,g);box(.07,.02,.11,M(0xeeeeee),.38,.796,.12,g);
+ box(.22,.025,.3,M(0xfafafa),-.62*s,.79,-.05,g).rotation.y=.2;
+ const mug=new THREE.Mesh(new THREE.CylinderGeometry(.045,.04,.1,12),M(r.color));mug.position.set(.55*s,.82,.12);g.add(mug);
+ // black mesh office chair
+ const ch=new THREE.Group();ch.position.set(0,0,.82);g.add(ch);
+ const blk=M(0x1a1a1a,{roughness:.6}),mesh=new THREE.MeshStandardMaterial({color:0x111111,transparent:true,opacity:.82,roughness:.9});
+ box(.5,.07,.48,blk,0,.5,0,ch);
+ const back=new THREE.Mesh(new THREE.BoxGeometry(.46,.58,.03),mesh);back.position.set(0,.86,.26);back.rotation.x=-.12;back.castShadow=true;ch.add(back);
+ box(.5,.04,.04,blk,0,1.16,.29,ch);box(.04,.62,.04,blk,-.24,.86,.27,ch).rotation.x=-.12;box(.04,.62,.04,blk,.24,.86,.27,ch).rotation.x=-.12;
+ [-1,1].forEach(k=>{box(.04,.2,.04,blk,k*.27,.62,.02,ch);box(.06,.03,.26,blk,k*.27,.72,.02,ch)});
+ const pole=new THREE.Mesh(new THREE.CylinderGeometry(.025,.03,.4,8),M(0x9ca3af,{metalness:.8,roughness:.3}));pole.position.y=.28;ch.add(pole);
+ for(let i=0;i<5;i++){const a=i*Math.PI*2/5;const leg=box(.3,.035,.05,blk,Math.cos(a)*.15,.06,Math.sin(a)*.15,ch);leg.rotation.y=-a;
+  const w=new THREE.Mesh(new THREE.SphereGeometry(.035,8,6),blk);w.position.set(Math.cos(a)*.3,.035,Math.sin(a)*.3);ch.add(w)}
+ scene.add(g);return{g,scr}}
+
+// person
+const SKIN=[0xf1c27d,0xe0ac69,0xc68642,0x8d5524];
+function makePerson(id,standing){const r=ROLES[id],g=new THREE.Group(),hip=standing?.92:.52;
+ const shirt=M(new THREE.Color(r.color)),pants=M(0x1e293b),skin=M(SKIN[Math.floor(Math.random()*SKIN.length)]),hair=M(0x1c1917);
+ const torso=new THREE.Mesh(new THREE.CylinderGeometry(.19,.23,.56,14),shirt);torso.position.y=hip+.3;torso.castShadow=true;g.add(torso);
+ const head=new THREE.Group();head.position.y=hip+.78;g.add(head);
+ const hm=new THREE.Mesh(new THREE.SphereGeometry(.17,18,14),skin);hm.castShadow=true;head.add(hm);
+ const cap=new THREE.Mesh(new THREE.SphereGeometry(.178,18,10,0,Math.PI*2,0,Math.PI/2.2),hair);cap.rotation.x=-.25;head.add(cap);
+ const limb=(px,py,len,th,mat)=>{const p=new THREE.Group();p.position.set(px,py,0);const m=new THREE.Mesh(new THREE.BoxGeometry(th,len,th),mat);m.position.y=-len/2;m.castShadow=true;p.add(m);g.add(p);return p};
+ const armL=limb(-.27,hip+.52,.46,.09,shirt),armR=limb(.27,hip+.52,.46,.09,shirt);
+ const legL=limb(-.1,hip,.44,.13,pants),legR=limb(.1,hip,.44,.13,pants);
+ const shin=(leg)=>{const p=new THREE.Group();p.position.y=-.44;const m=new THREE.Mesh(new THREE.BoxGeometry(.12,.46,.12),pants);m.position.y=-.23;m.castShadow=true;p.add(m);leg.add(p);return p};
+ const shL=shin(legL),shR=shin(legR);
+ if(!standing){legL.rotation.x=legR.rotation.x=-Math.PI/2;shL.rotation.x=shR.rotation.x=Math.PI/2;armL.rotation.x=armR.rotation.x=-1.15}
+ g.userData.hip=hip;return{g,head,armL,armR,legL,legR,shL,shR,phase:Math.random()*10}}
+
+// labels
+function makeLabel(text,color){const c=document.createElement('canvas');c.width=512;c.height=120;const x=c.getContext('2d');
+ x.fillStyle='rgba(15,23,42,.88)';x.beginPath();x.moveTo(30,10);x.arcTo(502,10,502,110,26);x.arcTo(502,110,10,110,26);x.arcTo(10,110,10,10,26);x.arcTo(10,10,502,10,26);x.fill();
+ x.fillStyle=color;x.fillRect(478,26,10,68);
+ x.fillStyle='#fff';x.font="700 46px 'IBM Plex Sans Arabic', sans-serif";x.textAlign='center';x.textBaseline='middle';x.direction='rtl';x.fillText(text,250,62);
+ const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true}));s.scale.set(2.1,.5,1);s.renderOrder=10;return s}
+
+const people={},desks={},clickables=[];
+function tagRole(obj,id){obj.traverse(o=>{o.userData.role=id;if(o.isMesh)clickables.push(o)})}
+
+// selection ring
+const ring=new THREE.Mesh(new THREE.RingGeometry(.55,.7,40),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.9,side:THREE.DoubleSide}));
+ring.rotation.x=-Math.PI/2;ring.position.y=.03;ring.visible=false;scene.add(ring);let selected=null;
+function selectRole(id){selected=id;ring.visible=!!id;if(id)ring.material.color.set(ROLES[id].color)}
+
+// walk path for auditor
+const PATH=[[4.2,0.6],[4.2,5.6],[-4.2,5.6],[-4.2,0.6],[-1.6,-0.9],[1.6,-0.9]].map(p=>new THREE.Vector3(p[0],0,p[1]));
+let pathLen=0;const segs=PATH.map((p,i)=>{const q=PATH[(i+1)%PATH.length],l=p.distanceTo(q);pathLen+=l;return{p,q,l}});
+function pathAt(d){d=((d%pathLen)+pathLen)%pathLen;for(const s of segs){if(d<=s.l)return{pos:s.p.clone().lerp(s.q,d/s.l),dir:s.q.clone().sub(s.p).normalize()};d-=s.l}return{pos:PATH[0].clone(),dir:new THREE.Vector3(0,0,1)}}
+
+// wall dashboard
+const wall=makeScreen(640,300);
+const wallMesh=new THREE.Mesh(new THREE.PlaneGeometry(4.6,2.15),new THREE.MeshBasicMaterial({map:wall.tex}));wallMesh.position.set(-13.85,2.1,-1);wallMesh.rotation.y=Math.PI/2;scene.add(wallMesh);
+box(.06,2.3,4.8,BLACK,-13.86,2.1,-1,scene);
+const counts={};ACCT.forEach(k=>counts[k]=0);
+function drawWall(){const{ctx}=wall;ctx.fillStyle='#0f172a';ctx.fillRect(0,0,640,300);ctx.direction='rtl';ctx.textAlign='right';
+ ctx.fillStyle='#fff';ctx.font="700 30px 'IBM Plex Sans Arabic', sans-serif";ctx.fillText('AI Reporting HUB · حالة الإقفال',616,44);
+ const max=Math.max(4,...Object.values(counts));
+ ACCT.forEach((k,i)=>{const y=80+i*36,r=ROLES[k];ctx.fillStyle='#cbd5e1';ctx.font="22px 'IBM Plex Sans Arabic', sans-serif";ctx.fillText(r.short,616,y+16);
+  ctx.fillStyle='#1e293b';ctx.fillRect(40,y,400,20);ctx.fillStyle=r.color;const w=400*counts[k]/max;ctx.fillRect(440-w,y,w,20);
+  ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(counts[k],10,y+17);ctx.textAlign='right'});
+ wall.tex.needsUpdate=true}
+
+function build(){
+ Object.keys(POS).forEach(id=>{const[x,z]=POS[id];
+  if(id==='audit'){const d=makeDesk(id,x,z);desks[id]=d;tagRole(d.g,id);
+   const p=makePerson(id,true);scene.add(p.g);people[id]=p;tagRole(p.g,id);const l=makeLabel(ROLES[id].short,ROLES[id].color);l.position.y=2.25;p.g.add(l);return}
+  const up=!!FACING_UP[id];
+  const d=makeDesk(id,x,z,id==='cfo'?1.35:1,up?Math.PI:0);desks[id]=d;tagRole(d.g,id);
+  const p=makePerson(id,false);p.g.position.set(x,0,up?z-.82:z+.82);p.g.rotation.y=up?0:Math.PI;scene.add(p.g);people[id]=p;tagRole(p.g,id);
+  const l=makeLabel(ROLES[id].short,ROLES[id].color);l.position.set(0,1.95,0);p.g.add(l)});
+ drawWall()}
+
+/* ---------- documents & workflow ---------- */
+const flights=[];const docGeo=new THREE.BoxGeometry(.3,.02,.38);
+function deskTop(id){const[x,z]=POS[id];return new THREE.Vector3(x,1.5,z)}
+function fly(fromId,toId,color,onDone){const m=new THREE.Mesh(docGeo,new THREE.MeshStandardMaterial({color:0xffffff,emissive:new THREE.Color(color),emissiveIntensity:.8}));
+ scene.add(m);flights.push({m,a:deskTop(fromId),b:deskTop(toId),t:0,dur:1.6+Math.random()*.4,onDone})}
+const flashes={};function flash(id,sym){flashes[id]={t:.8,sym};drawScreen(desks[id].scr,ROLES[id].color,sym)}
+const stats={done:0,ok:0,back:0};
+function log(id,msg){const li=document.createElement('li');const d=new Date();
+ li.innerHTML=`<span class="t">${d.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</span><span class="d" style="background:${ROLES[id].color}"></span>`;
+ li.appendChild(document.createTextNode(msg));logList.prepend(li);while(logList.children.length>14)logList.lastChild.remove()}
+function setStats(){sDone.textContent=stats.done;sOk.textContent=stats.ok;sBack.textContent=stats.back}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function workCycle(){if(paused||mode!=='sim')return;const id=pick(ACCT),r=ROLES[id],task=pick(r.tasks);
+ nowTask[id]=task;nowTask.chief='يراجع: '+task;updateNow();
+ stats.done++;counts[id]++;drawWall();setStats();flash(id,'✓');
+ log(id,`${r.short}: ${task}، وأرسله لرئيس الحسابات`);
+ fly(id,'chief',r.color,()=>{flash('chief','…');
+  setTimeout(()=>{if(Math.random()<.8){stats.ok++;flash('chief','✓');log('chief',`رئيس الحسابات اعتمد ملف ${r.short} ورفعه للمدير المالي`);
+    fly('chief','cfo',ROLES.chief.color,()=>{flash('cfo','✓');nowTask.cfo='يراجع ملف '+r.short+' المعتمد'});}
+   else{stats.back++;flash('chief','!');log('chief',`رئيس الحسابات أرجع ملف ${r.short} بملاحظة: ينقصه رقم القيد كدليل`);fly('chief',id,'#ef4444',()=>flash(id,'!'))}
+   setStats()},900)})}
+function auditCycle(){if(paused||mode!=='sim')return;const id=pick(ACCT);nowTask.audit='يفحص عينة من ملف '+ROLES[id].short;updateNow();
+ log('audit',`المراجع الداخلي سحب عينة مستقلة من ملف ${ROLES[id].short}`)}
+
+/* ---------- interaction ---------- */
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+renderer.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;
+ const rc=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-rc.left)/rc.width*2-1,-(e.clientY-rc.top)/rc.height*2+1);
+ ray.setFromCamera(mouse,camera);const hit=ray.intersectObjects(clickables,false)[0];if(hit&&hit.object.userData.role){openSheet(hit.object.userData.role);focusRole(hit.object.userData.role)}});
+let camTween=null;
+function focusRole(id){const p=people[id].g.position;const tgt=new THREE.Vector3(p.x,1,p.z);
+ camTween={t:0,fromC:camera.position.clone(),toC:tgt.clone().add(new THREE.Vector3(3.8,3.6,4.6)),fromT:controls.target.clone(),toT:tgt};controls.autoRotate=false}
+resetBtn.onclick=()=>{userMoved=false;camera.position.copy(CAM0);controls.target.copy(TGT0);fitView(false);controls.autoRotate=true};
+let paused=false;pauseBtn.onclick=()=>{paused=!paused;pauseBtn.textContent=paused?'▶ تشغيل الحركة':'⏸ إيقاف الحركة'};
+
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(()=>{resize();if(!userMoved)fitView(false)}).observe(stage);resize();
+renderer.domElement.style.touchAction='pan-y';
+/* ---------- camera controls: buttons, Ctrl+wheel, auto-fit ---------- */
+let userMoved=false;controls.addEventListener('start',()=>{userMoved=true});
+const OFFICE=new THREE.Box3(new THREE.Vector3(-14,0,-12.6),new THREE.Vector3(14,3,11.5));
+function fitView(anim=true){const sph=OFFICE.getBoundingSphere(new THREE.Sphere());
+ const dir=camera.position.clone().sub(controls.target);if(dir.lengthSq()<1e-6)dir.copy(CAM0).sub(TGT0);dir.normalize();
+ const vf=THREE.MathUtils.degToRad(camera.fov),hf=2*Math.atan(Math.tan(vf/2)*camera.aspect);
+ const dist=Math.min(controls.maxDistance,sph.radius*0.7/Math.sin(Math.min(vf,hf)/2));
+ const tgt=sph.center.clone().setY(0.6),pos=tgt.clone().add(dir.multiplyScalar(dist));
+ if(anim){camTween={t:0,fromC:camera.position.clone(),toC:pos,fromT:controls.target.clone(),toT:tgt}}else{camera.position.copy(pos);controls.target.copy(tgt);controls.update()}}
+function dolly(f){const d=camera.position.clone().sub(controls.target);let L=d.length()*f;L=Math.max(controls.minDistance,Math.min(controls.maxDistance,L));camera.position.copy(controls.target).add(d.setLength(L))}
+function orbit(dAz,dPol){const off=camera.position.clone().sub(controls.target),sp=new THREE.Spherical().setFromVector3(off);
+ sp.theta+=dAz;sp.phi=Math.max(0.15,Math.min(controls.maxPolarAngle,sp.phi+dPol));off.setFromSpherical(sp);camera.position.copy(controls.target).add(off)}
+function pan(dx,dz){const f=camera.position.clone().sub(controls.target);f.y=0;f.normalize();const r=new THREE.Vector3(-f.z,0,f.x);
+ const step=Math.max(.4,camera.position.distanceTo(controls.target)*.05),m=r.multiplyScalar(dx*step).add(f.multiplyScalar(-dz*step));
+ camera.position.add(m);controls.target.add(m)}
+const ACT={in:()=>dolly(.9),out:()=>dolly(1.1),rotL:()=>orbit(.06,0),rotR:()=>orbit(-.06,0),tiltUp:()=>orbit(0,-.05),tiltDn:()=>orbit(0,.05),
+ panL:()=>pan(-1,0),panR:()=>pan(1,0),panF:()=>pan(0,1),panB:()=>pan(0,-1)};
+document.querySelectorAll('.nav3d button[data-a]').forEach(b=>{const a=b.dataset.a;let t=null,iv=null;
+ const stop=()=>{clearTimeout(t);clearInterval(iv);t=iv=null};
+ if(a==='fit'){b.onclick=()=>{userMoved=false;controls.autoRotate=false;fitView(true)};return}
+ if(a==='full'){b.onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():stage.requestFullscreen().catch(()=>{})}catch(e){}};return}
+ b.addEventListener('pointerdown',e=>{e.preventDefault();userMoved=true;controls.autoRotate=false;camTween=null;ACT[a]();t=setTimeout(()=>{iv=setInterval(ACT[a],45)},280)});
+ ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,stop))});
+renderer.domElement.addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();userMoved=true;controls.autoRotate=false;dolly(e.deltaY>0?1.08:.92)},{passive:false});
+fitView(false);
+
+/* ---------- loop ---------- */
+const clock=new THREE.Clock();let simT=0,walkD=0,screenTick=0;
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);
+ if(!paused){simT+=dt;
+  Object.entries(people).forEach(([id,p])=>{if(id==='audit')return;const t=simT+p.phase;
+   p.armL.rotation.x=-1.15+Math.sin(t*13)*.09;p.armR.rotation.x=-1.15+Math.sin(t*13+1.7)*.09;
+   p.head.rotation.y=Math.sin(t*.45)*.35;p.head.rotation.x=.08+Math.sin(t*.8)*.05});
+  // auditor walks
+  const a=people.audit;walkD+=dt*1.15;const{pos,dir}=pathAt(walkD);a.g.position.set(pos.x,0,pos.z);
+  a.g.rotation.y=Math.atan2(dir.x,dir.z);const sw=Math.sin(walkD*5.2);
+  a.legL.rotation.x=sw*.5;a.legR.rotation.x=-sw*.5;a.shL.rotation.x=Math.max(0,-sw)*.6;a.shR.rotation.x=Math.max(0,sw)*.6;
+  a.armL.rotation.x=-sw*.45;a.armR.rotation.x=sw*.45;a.g.position.y=Math.abs(Math.cos(walkD*5.2))*.04;
+  plants.forEach((pl,i)=>pl.rotation.z=Math.sin(simT*.8+i)*.015);
+  screenTick+=dt;if(screenTick>.6){screenTick=0;const id=pick(Object.keys(desks));if(!flashes[id])drawScreen(desks[id].scr,ROLES[id].color)}
+ }
+ for(const id in flashes){flashes[id].t-=dt;if(flashes[id].t<=0){delete flashes[id];drawScreen(desks[id].scr,ROLES[id].color)}}
+ for(let i=flights.length-1;i>=0;i--){const f=flights[i];f.t+=dt/f.dur;const k=Math.min(f.t,1),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+  f.m.position.lerpVectors(f.a,f.b,e);f.m.position.y+=Math.sin(Math.PI*k)*1.8;f.m.rotation.y+=dt*4;f.m.rotation.z=Math.sin(k*Math.PI)*.4;
+  if(f.t>=1){scene.remove(f.m);f.m.material.dispose();flights.splice(i,1);f.onDone&&f.onDone()}}
+ if(selected){const p=people[selected].g.position;ring.position.x=p.x;ring.position.z=p.z;const s=1+Math.sin(performance.now()/250)*.08;ring.scale.set(s,s,s)}
+ if(camTween){camTween.t=Math.min(1,camTween.t+dt/1.2);const e=1-Math.pow(1-camTween.t,3);
+  camera.position.lerpVectors(camTween.fromC,camTween.toC,e);controls.target.lerpVectors(camTween.fromT,camTween.toT,e);if(camTween.t>=1)camTween=null}
+ warm.intensity=.55+Math.sin(performance.now()/900)*.08;
+ controls.update();renderer.render(scene,camera)}
+
+/* ---------- real run replay: October 2026 (from Finance-Dept/runs/2026-10/run_log.md and handoffs) ---------- */
+const RUN=[
+ ['cfo','open','المدير المالي فتح فترة أكتوبر 2026 ووزّع المهام على الفريق'],
+ ['ar-insurance-accountant','handoff','الذمم المدينة سلّم: 65 سند قبض على 1240007 = 1,209,575.79 · ملاحظة عالية: دفعة BR2-26/00229 زيادة 5,197.26'],
+ ['ar-insurance-accountant','approve','رئيس الحسابات اعتمد الذمم من الجولة الأولى (عدّ مستقل: 65 سنداً مطابقة)'],
+ ['ap-supplier-accountant','handoff','الموردين سلّم: رصيد 2122001 الموحد 5,120,279.40 · مستحقات نوفمبر 4,421,060.96'],
+ ['ap-supplier-accountant','return','رئيس الحسابات أرجع الموردين: 91% من مسودة التحويل على مدة ائتمان افتراضية (15 يوماً)'],
+ ['vat-accountant','handoff','الضريبة سلّم: صافي إقرار أكتوبر 354,747.72 · المدخلات مطابقة'],
+ ['payroll-accountant','handoff','الرواتب سلّم: صافي 2,237,889 لـ 374 موظفاً · قيود الرواتب مطابقة'],
+ ['ap-supplier-accountant','handoff','الموردين أعاد التسليم: مسودة البنك 240,624.29 فقط · موقوف لتأكيد المدة 3,513,966.61'],
+ ['ap-supplier-accountant','approve','رئيس الحسابات اعتمد الموردين في الجولة الثانية'],
+ ['cost-inventory-accountant','handoff','التكاليف سلّم: 934 سطراً في خريطة التكلفة · 10 قفزات أسعار شراء'],
+ ['gl-accountant','handoff','الأستاذ العام سلّم: ميزان الرياض بفرق −101.86 بسبب JV1-26/03058'],
+ ['vat-accountant','return','رئيس الحسابات أرجع الضريبة: فواتير إيجار غير مرسلة لـ ZATCA تصل إلى 136,875'],
+ ['payroll-accountant','return','رئيس الحسابات أرجع الرواتب: نسب الأطباء مانع إقفال، والسلف على الرصيد الموحد'],
+ ['vat-accountant','handoff','الضريبة أعاد التسليم: 4 فواتير إيجار = 136,875 · فحص كل الشهور المفتوحة'],
+ ['payroll-accountant','handoff','الرواتب أعاد التسليم: السلف 48,739.62 موحداً والفرق 21,604.66'],
+ ['payroll-accountant','approve','رئيس الحسابات اعتمد الرواتب (مع مانع إقفال مفتوح)'],
+ ['vat-accountant','approve','رئيس الحسابات اعتمد الضريبة في الجولة الثانية'],
+ ['gl-accountant','return','رئيس الحسابات أرجع الأستاذ العام: شحن المنصة ليس تكراراً، والإيجار القديم «غير مؤكد»'],
+ ['cost-inventory-accountant','return','رئيس الحسابات أرجع التكاليف: المناديل −7% لا +95%، وتقسيم الخدمات 7/4/1'],
+ ['gl-accountant','handoff','الأستاذ العام أعاد التسليم بالتصحيحات الستة'],
+ ['gl-accountant','approve','رئيس الحسابات اعتمد الأستاذ العام في الجولة الثانية'],
+ ['cost-inventory-accountant','handoff','التكاليف أعاد التسليم: خطأ وحدة في المعطّر (1,536 بدل 384)'],
+ ['cost-inventory-accountant','approve','رئيس الحسابات اعتمد التكاليف في الجولة الثانية'],
+ ['internal-auditor','audit','المراجع الداخلي: 14 بنداً من 14 متفقة مع Cure — «استثناءات طفيفة»'],
+ ['cfo','summary','المدير المالي: أكتوبر غير جاهز للإقفال — 3 موانع (نسب الأطباء، JV1-26/03058، فواتير ZATCA)']
+];
+const R2P={'ar-insurance-accountant':'ar','ap-supplier-accountant':'ap','vat-accountant':'vat','payroll-accountant':'payroll','cost-inventory-accountant':'cost','gl-accountant':'gl','internal-auditor':'audit','cfo':'cfo'};
+let mode='real',step=0,runTimer=null,simTimers=[];
+function replayStep(){if(paused||mode!=='real')return;
+ if(step>=RUN.length){setTimeout(()=>{if(mode!=='real')return;step=0;stats.done=stats.ok=stats.back=0;ACCT.forEach(k=>counts[k]=0);setStats();drawWall();logList.innerHTML='';},5000);step=RUN.length+1;return}
+ if(step>RUN.length)return;
+ const [rid,kind,text]=RUN[step++],id=R2P[rid];
+ if(kind==='open'){log('cfo',text);flash('cfo','▶');return}
+ if(kind==='handoff'){stats.done++;counts[id]++;drawWall();flash(id,'✓');nowTask[id]=text;nowTask.chief='يراجع ملف '+ROLES[id].short;log(id,text);fly(id,'chief',ROLES[id].color,()=>flash('chief','…'))}
+ else if(kind==='return'){stats.back++;flash('chief','!');log('chief',text);fly('chief',id,'#ef4444',()=>flash(id,'!'))}
+ else if(kind==='approve'){stats.ok++;flash('chief','✓');log('chief',text);fly('chief','cfo',ROLES.chief.color,()=>flash('cfo','✓'))}
+ else if(kind==='audit'){nowTask.audit=text;log('audit',text);fly('audit','cfo',ROLES.audit.color,()=>flash('cfo','✓'))}
+ else if(kind==='summary'){nowTask.cfo=text;log('cfo',text);flash('cfo','!')}
+ setStats();updateNow()}
+function startReal(){mode='real';step=0;stats.done=stats.ok=stats.back=0;ACCT.forEach(k=>counts[k]=0);setStats();drawWall();logList.innerHTML='';
+ simTimers.forEach(clearInterval);simTimers=[];logTitle.textContent='تشغيل أكتوبر 2026 الفعلي';modeBtn.textContent='🎲 محاكاة';
+ clearInterval(runTimer);replayStep();runTimer=setInterval(replayStep,3400)}
+function startSim(){mode='sim';clearInterval(runTimer);logTitle.textContent='محاكاة — نشاط تجريبي';modeBtn.textContent='🎬 أكتوبر 2026 الفعلي';logList.innerHTML='';
+ log('cfo','المدير المالي وزّع مهام إقفال الشهر على الفريق');simTimers=[setInterval(workCycle,3800),setInterval(auditCycle,9000)]}
+modeBtn.onclick=()=>{mode==='real'?startSim():startReal()};
+
+(document.fonts?document.fonts.load("700 46px 'IBM Plex Sans Arabic'").catch(()=>{}):Promise.resolve()).then(()=>{
+ build();animate();
+ startReal();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+/* --- CFO Modeling Desk mapping --- */
+html:root[data-theme],html:root:not([data-theme]){
+  --bg:var(--cu-bg);--surface:var(--cu-surf);--surface-2:var(--cu-surf2);--surface-3:var(--cu-surf3);
+  --ink:var(--cu-ink);--ink-muted:var(--cu-mute);--ink-faint:var(--cu-faint);
+  --accent:var(--cu-blue);--accent-soft:var(--cu-soft);--accent-line:color-mix(in srgb,var(--cu-blue) 40%,transparent);
+  --border:var(--cu-line);--critical:var(--cu-red);--shadow:var(--cu-shadow)}
+.app{min-height:calc(100vh - var(--cu-hd) - var(--cu-ft))!important}
+.sidebar{top:var(--cu-hd)!important;height:calc(100vh - var(--cu-hd) - var(--cu-ft))!important;background:var(--cu-surf)!important;padding:16px 12px!important}
+.sidebar .brand h1{color:var(--cu-blue)!important;font-weight:700!important}
+.sidebar .brand .eyebrow{color:var(--cu-orange)!important}
+.nav-group{color:var(--cu-blue)!important;opacity:.9}
+.nav-item{border:1px solid var(--cu-line)!important;background:var(--cu-surf)!important;border-radius:10px!important;padding:6px 9px!important;margin:2px 0;color:var(--cu-ink)!important;font-weight:500!important;box-shadow:0 1px 2px rgba(16,42,84,.04)}
+.nav-item .ic{width:28px!important;height:28px!important;flex:0 0 28px!important;padding:5px;border:1px solid var(--cu-line);border-radius:7px;background:var(--cu-surf);color:var(--cu-blue);opacity:1!important;box-sizing:border-box}
+.nav-item:hover{border-color:var(--cu-blue2)!important;background:var(--cu-soft)!important}
+.nav-item.active{background:var(--cu-blue)!important;border-color:var(--cu-blue)!important;color:#fff!important;font-weight:600!important;box-shadow:0 3px 10px rgba(11,111,191,.25)}
+.nav-item.active .ic{color:var(--cu-blue);background:#fff;border-color:#fff}
+.section-head .eyebrow{color:var(--cu-blue)!important}
+.theme-toggle button.active{color:var(--cu-blue)!important}
+.kpi .value,.empty-state h4,.br-head .t,#sec-dept .bd-sc .bd-big,.section-head h2,.brand h1{font-family:'Roboto','Cairo',system-ui,sans-serif!important}
+.ti-bar,#sec-dept .bd-bar{top:var(--cu-hd)!important}
+.nph-panel{top:calc(var(--cu-hd) + 12px)!important}

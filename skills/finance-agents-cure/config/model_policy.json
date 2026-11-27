@@ -1,0 +1,80 @@
+{
+  "version": "1.0",
+  "note": "Default model per role and when the dispatcher (SKILL.md) moves a run up or down. Models: haiku (cheap, mechanical), sonnet (default work), opus (judgment-heavy). Values are Claude Code aliases; 'inherit' = the session's model.",
+  "roles": {
+    "finance-manager": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "board report or recommendations for the board are requested",
+        "more than 5 high findings across the department"
+      ]
+    },
+    "chief-accountant": {
+      "default": "opus",
+      "down_to_sonnet_when": [
+        "round-2 re-review limited to the items it returned"
+      ],
+      "why": "the checker found real errors in 5 of 6 October handoffs; judgment matters most here"
+    },
+    "internal-auditor": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "previous period rated 'material exceptions'",
+        "a sampled item disagrees with the approved value"
+      ]
+    },
+    "ar-insurance-accountant": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "settlement (مخالصة) reconciliation or multi-month pro-rata allocation",
+        "the handoff was returned twice"
+      ]
+    },
+    "ap-supplier-accountant": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "full statement-by-statement reconciliation with differences",
+        "the handoff was returned twice"
+      ]
+    },
+    "vat-accountant": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "return ↔ trial-balance reconciliation does not tie after the standard adjustments",
+        "quarter or year-end return",
+        "the handoff was returned twice"
+      ]
+    },
+    "payroll-accountant": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "doctors' commission recalculation from Cure",
+        "the handoff was returned twice"
+      ]
+    },
+    "cost-inventory-accountant": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "costing-map redesign or stock-valuation error investigation",
+        "the handoff was returned twice"
+      ]
+    },
+    "gl-accountant": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "trial balance does not balance and the cause is not a single voucher",
+        "year-end close",
+        "the handoff was returned twice"
+      ]
+    }
+  },
+  "task_overrides": {
+    "haiku": [
+      "re-check of a single open finding or close blocker (e.g. 'is the commission accrual booked yet?')",
+      "period setup, run-log update, schema validation",
+      "answering a referral that needs one or two queries"
+    ]
+  },
+  "self_escalation": "An agent that finds the task beyond its model (cannot tie a control total after two approaches, conflicting rules, or evidence it cannot interpret) stops, sets `model_escalation` in its handoff with the reason, status `blocked`; the dispatcher re-runs that role one level up (haiku→sonnet→opus). Never more than one escalation per role per period without asking the human.",
+  "downshift": "If the same role on opus was approved first time for two consecutive periods with the same scope, the dispatcher may try sonnet next period and compare."
+}

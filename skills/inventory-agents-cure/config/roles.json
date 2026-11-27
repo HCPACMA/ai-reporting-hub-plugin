@@ -1,0 +1,414 @@
+{
+  "version": "1.0.0",
+  "note": "Single source of truth for the inventory department; agents/*.md, the dashboard tab and the 3D warehouse must match it.",
+  "department_ar": "إدارة المخازن",
+  "roles": [
+    {
+      "id": "inv-manager",
+      "name_ar": "مدير المخازن",
+      "name_en": "Inventory Manager",
+      "reports_to": "finance-manager",
+      "kind": "orchestrator",
+      "color": "#3b82f6",
+      "summary_ar": "يقود إدارة المخازن: يوزّع المهام، يراجع المخرجات المعتمدة، ويرفع ملخص المخزون للمدير المالي ومجلس الإدارة.",
+      "responsibilities_ar": [
+        "توزيع المهام الشهرية على فريق المخازن",
+        "اعتماد خطة الجرد وإعادة التوزيع",
+        "مراجعة ملخص قيمة المخزون وحركته",
+        "رفع تقرير المخزون للمدير المالي وتقرير المجلس",
+        "تصعيد الملاحظات الجوهرية (احتيال، تقييم، صلاحية)"
+      ],
+      "duties": [
+        {
+          "freq": "شهري",
+          "task_ar": "فتح الفترة وتوزيع المهام على الفريق",
+          "source": "—",
+          "output": "run_log.md"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "مراجعة ملخص قيمة المخزون والتغير عن الشهر السابق",
+          "source": "Overview",
+          "output": "summary.md"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "إعداد مدخلات تقرير المجلس عن المخزون",
+          "source": "تقرير المجلس",
+          "output": "summary.md"
+        },
+        {
+          "freq": "ربع سنوي",
+          "task_ar": "مراجعة مؤشرات الأداء ومستويات المخزون المستهدفة",
+          "source": "ABC / Pareto · ABC × XYZ",
+          "output": "summary.md"
+        }
+      ],
+      "kpis_ar": [
+        "قيمة المخزون وتغيرها",
+        "أيام التغطية",
+        "نسبة الرواكد من القيمة",
+        "ملاحظات مغلقة في موعدها"
+      ],
+      "tabs": [
+        "overview",
+        "board"
+      ],
+      "cadence": "monthly"
+    },
+    {
+      "id": "inv-controller",
+      "name_ar": "مراقب المخزون",
+      "name_en": "Inventory Controller",
+      "reports_to": "inv-manager",
+      "kind": "checker",
+      "color": "#8b5cf6",
+      "summary_ar": "المراجع (Checker): يراجع عمل كل موظف مقابل القواعد الثابتة والأدلة، ويعتمد أو يُرجع.",
+      "responsibilities_ar": [
+        "مراجعة ملف كل موظف مقابل قواعد المخزون الثابتة",
+        "إعادة فحص عينة من الملاحظات من Cure مباشرة",
+        "التأكد أن كل ملاحظة معها دليل (رقم مستند، صنف، كمية، قيمة)",
+        "اعتماد أو إرجاع الملف مع السبب",
+        "متابعة الإحالات بين الموظفين"
+      ],
+      "duties": [
+        {
+          "freq": "بعد كل تسليم",
+          "task_ar": "مراجعة ملف التسليم ومطابقته مع الـ schema",
+          "source": "handoff.json",
+          "output": "review.md"
+        },
+        {
+          "freq": "بعد كل تسليم",
+          "task_ar": "إعادة فحص 3 ملاحظات على الأقل من المصدر",
+          "source": "Cure",
+          "output": "review.md"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "التأكد من الرد على كل الإحالات",
+          "source": "referrals",
+          "output": "review.md"
+        }
+      ],
+      "kpis_ar": [
+        "نسبة الملفات المعتمدة من أول مرة",
+        "ملاحظات بلا دليل = صفر"
+      ],
+      "tabs": [],
+      "cadence": "after every handoff"
+    },
+    {
+      "id": "inv-auditor",
+      "name_ar": "مدقق الرقابة ومكافحة الاحتيال",
+      "name_en": "Inventory Controls & Fraud Auditor",
+      "reports_to": "inv-manager",
+      "kind": "independent",
+      "color": "#ef4444",
+      "summary_ar": "مستقل: يفحص عينات من المخرجات المعتمدة ومؤشرات الاحتيال من المصدر، دون رؤية طريقة الإعداد.",
+      "responsibilities_ar": [
+        "فحص مؤشرات الاحتيال (تكرار الاستلام، الصرف خارج الأوقات، تسويات غير مبررة)",
+        "إعادة اختبار عينة من الملاحظات المعتمدة",
+        "متابعة إغلاق ملاحظات الشهور السابقة",
+        "رفع تقرير مستقل لمدير المخازن"
+      ],
+      "duties": [
+        {
+          "freq": "شهري",
+          "task_ar": "مراجعة شاشة كشف الاحتيال وتصنيف التنبيهات",
+          "source": "Fraud Detection",
+          "output": "audit.md"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "إعادة اختبار عينة من الملاحظات المعتمدة من Cure",
+          "source": "Cure",
+          "output": "audit.md"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "التحقق من إغلاق ملاحظات الشهر السابق",
+          "source": "handoffs",
+          "output": "audit.md"
+        }
+      ],
+      "kpis_ar": [
+        "تنبيهات احتيال مُصنّفة",
+        "نسبة توافق العينة"
+      ],
+      "tabs": [
+        "fraud"
+      ],
+      "cadence": "monthly"
+    },
+    {
+      "id": "inv-receiving",
+      "name_ar": "أمين الاستلام والصرف",
+      "name_en": "Receiving & Issuing Keeper",
+      "reports_to": "inv-controller",
+      "kind": "maker",
+      "color": "#10b981",
+      "summary_ar": "يراجع استلام فواتير الشراء وصرف الأصناف للأقسام والتحويل بين الفروع.",
+      "responsibilities_ar": [
+        "مطابقة فواتير الشراء المستلمة مع المرفقات",
+        "مراجعة تنبيهات الاستلام (كميات/أسعار غير معتادة)",
+        "مراجعة الصرف حسب مركز التكلفة",
+        "متابعة التحويلات بين الفروع والمخازن"
+      ],
+      "duties": [
+        {
+          "freq": "يومي",
+          "task_ar": "مراجعة فواتير الشراء المرحّلة ومرفقاتها",
+          "source": "Receiving Flags · Purchases & Pricing",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "أسبوعي",
+          "task_ar": "مراجعة الصرف حسب مركز التكلفة وأي صرف غير معتاد",
+          "source": "Dispense by CC",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "مطابقة التحويلات المرسلة مع المستلمة بين الفروع",
+          "source": "Cross-Branch Audit",
+          "output": "handoff.json"
+        }
+      ],
+      "kpis_ar": [
+        "فواتير بلا مرفق",
+        "تحويلات غير مستلمة"
+      ],
+      "tabs": [
+        "receiving",
+        "dispense",
+        "crossorg"
+      ],
+      "cadence": "daily / weekly"
+    },
+    {
+      "id": "inv-count",
+      "name_ar": "مسؤول الجرد والتسويات",
+      "name_en": "Cycle Count & Adjustments Officer",
+      "reports_to": "inv-controller",
+      "kind": "maker",
+      "color": "#06b6d4",
+      "summary_ar": "يخطط الجرد الدوري ويراجع فروقاته وتسويات المخزون.",
+      "responsibilities_ar": [
+        "إعداد خطة الجرد الدوري حسب تصنيف ABC",
+        "مراجعة فروقات الجرد والتسويات وأسبابها",
+        "تتبع التسويات المتكررة على نفس الصنف",
+        "رفع التسويات الكبيرة للمراقب"
+      ],
+      "duties": [
+        {
+          "freq": "أسبوعي",
+          "task_ar": "جرد دوري لأصناف الفئة A",
+          "source": "ABC / Pareto",
+          "output": "count_plan.csv"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "مراجعة فروقات الجرد والتسويات",
+          "source": "Cycle-Count Variance",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "ربع سنوي",
+          "task_ar": "جرد الفئات B وC",
+          "source": "ABC / Pareto",
+          "output": "count_plan.csv"
+        }
+      ],
+      "kpis_ar": [
+        "دقة الجرد %",
+        "قيمة التسويات"
+      ],
+      "tabs": [
+        "cyclecount",
+        "abc"
+      ],
+      "cadence": "weekly / monthly"
+    },
+    {
+      "id": "inv-expiry",
+      "name_ar": "محلل الصلاحية والرواكد",
+      "name_en": "Expiry & Slow-Moving Analyst",
+      "reports_to": "inv-controller",
+      "kind": "maker",
+      "color": "#f59e0b",
+      "summary_ar": "يتابع الأصناف القريبة من انتهاء الصلاحية والرواكد والمخزون الزائد.",
+      "responsibilities_ar": [
+        "متابعة الأصناف القريبة من انتهاء الصلاحية",
+        "تحديد الرواكد (3 أشهر استهلاك على الأقل)",
+        "تحديد المخزون الزائد عن الحاجة",
+        "اقتراح إعادة التوزيع أو الإرجاع للمورد قبل الانتهاء"
+      ],
+      "duties": [
+        {
+          "freq": "أسبوعي",
+          "task_ar": "قائمة الأصناف التي تنتهي خلال 90 يوماً",
+          "source": "Expiry",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "تحديث قائمة الرواكد والمخزون الزائد",
+          "source": "Slow-Moving · Overstock · Aging Bucket",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "إحالة المقترحات لمخطط الطلب",
+          "source": "referrals",
+          "output": "handoff.json"
+        }
+      ],
+      "kpis_ar": [
+        "قيمة المنتهي/القريب من الانتهاء",
+        "نسبة الرواكد"
+      ],
+      "tabs": [
+        "expiry",
+        "slowmoving",
+        "overstock",
+        "aging"
+      ],
+      "cadence": "weekly / monthly"
+    },
+    {
+      "id": "inv-planner",
+      "name_ar": "مخطط الطلب وإعادة التوزيع",
+      "name_en": "Demand & Rebalancing Planner",
+      "reports_to": "inv-controller",
+      "kind": "maker",
+      "color": "#ec4899",
+      "summary_ar": "يتوقع الطلب ويقترح كميات الشراء وإعادة التوزيع بين الفروع.",
+      "responsibilities_ar": [
+        "توقع الطلب الشهري للأصناف",
+        "تحديد نقاط إعادة الطلب حسب ABC × XYZ",
+        "اقتراح التحويل بين الفروع بدل الشراء",
+        "مراجعة دقة التوقع مقابل الفعلي"
+      ],
+      "duties": [
+        {
+          "freq": "شهري",
+          "task_ar": "تحديث توقع الطلب ومقارنته بالفعلي",
+          "source": "📈 Demand Forecast",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "اقتراحات إعادة التوزيع بين الفروع",
+          "source": "🔄 Rebalancing",
+          "output": "rebalance.csv"
+        },
+        {
+          "freq": "ربع سنوي",
+          "task_ar": "مراجعة تصنيف ABC × XYZ ونقاط إعادة الطلب",
+          "source": "🧮 ABC × XYZ",
+          "output": "handoff.json"
+        }
+      ],
+      "kpis_ar": [
+        "دقة التوقع (MAPE)",
+        "قيمة التحويل بدل الشراء"
+      ],
+      "tabs": [
+        "forecast",
+        "rebalance",
+        "abcxyz"
+      ],
+      "cadence": "monthly"
+    },
+    {
+      "id": "inv-purchasing",
+      "name_ar": "محلل المشتريات والموردين",
+      "name_en": "Purchasing & Vendor Analyst",
+      "reports_to": "inv-controller",
+      "kind": "maker",
+      "color": "#84cc16",
+      "summary_ar": "يراقب أسعار الشراء والموردين وفرص التوفير.",
+      "responsibilities_ar": [
+        "مراقبة تغير أسعار الشراء لكل صنف",
+        "مقارنة الأسعار بين الموردين وأرخص سعر",
+        "مراقبة تركز الموردين",
+        "استبعاد الفواتير التي عليها مرتجعات من مقارنات الأسعار"
+      ],
+      "duties": [
+        {
+          "freq": "أسبوعي",
+          "task_ar": "تنبيهات الأسعار والموردين",
+          "source": "🎯 Price & Vendor Watch",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "تحليل أسعار الشراء وفرص التوفير",
+          "source": "Purchases & Pricing",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "ربع سنوي",
+          "task_ar": "تحليل تركز الموردين",
+          "source": "Vendor Concentration",
+          "output": "handoff.json"
+        }
+      ],
+      "kpis_ar": [
+        "التوفير المحتمل",
+        "نسبة أكبر 5 موردين"
+      ],
+      "tabs": [
+        "purchases",
+        "watch",
+        "vendor"
+      ],
+      "cadence": "weekly / monthly"
+    },
+    {
+      "id": "inv-valuation",
+      "name_ar": "مدقق تقييم المخزون",
+      "name_en": "Stock Valuation Auditor",
+      "reports_to": "inv-controller",
+      "kind": "maker",
+      "color": "#94a3b8",
+      "summary_ar": "يراجع صحة تكلفة الأصناف وقيمة المخزون ويطابقها مع الأستاذ العام.",
+      "responsibilities_ar": [
+        "مراجعة أخطاء التقييم (قفزات التكلفة بعد نفاد الرصيد)",
+        "مطابقة قيمة المخزون مع حسابات المخزون في الأستاذ",
+        "مراجعة فواتير الشراء بتكلفة صفر أو بوحدة خاطئة",
+        "إحالة أثر التقييم لمحاسب التكاليف في الإدارة المالية"
+      ],
+      "duties": [
+        {
+          "freq": "شهري",
+          "task_ar": "مراجعة شاشة أخطاء التقييم",
+          "source": "⚖️ Valuation Errors",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "مطابقة قيمة المخزون مع الأستاذ العام",
+          "source": "Overview · GL",
+          "output": "handoff.json"
+        },
+        {
+          "freq": "شهري",
+          "task_ar": "إحالة الأثر لمحاسب التكاليف (الإدارة المالية)",
+          "source": "referrals",
+          "output": "handoff.json"
+        }
+      ],
+      "kpis_ar": [
+        "أصناف بأخطاء تقييم",
+        "فرق المخزون مع الأستاذ"
+      ],
+      "tabs": [
+        "valerr",
+        "overview"
+      ],
+      "cadence": "monthly"
+    }
+  ]
+}

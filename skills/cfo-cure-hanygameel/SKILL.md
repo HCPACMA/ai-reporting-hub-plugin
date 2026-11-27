@@ -27,6 +27,8 @@ Features:
   - `refresh/`: `refresh.py` and its runbook — the only way to refresh the desk.
   - `scripts/drv/`: the driver SQL generator and payload builder; `DRIVERS.md` is the feature note.
   - `templates/`: the UI modules (JS/CSS); `ModelingDesk_current.html` is the reference page and wins over any module file.
+  - `templates/ModelingDesk_shell.html`: the **same page with all company data removed** (every amount is a random dummy, names and labels blanked). It ships inside the plugin; `ModelingDesk_current.html` does not, because it embeds company data.
+- **Building in another Claude account (plugin install, no kit folder or project docs):** start from `templates/ModelingDesk_shell.html` — copy its layout, navigation, CSS and every tab's render code exactly, and replace each `DATA.<name>` payload with live figures pulled through the Cure MCP using `sql/` + `scripts/` + `SPEC.md`. Do **not** design a new page from the feature list; the shell *is* the design. Never publish the shell's dummy numbers as results. If the Cure MCP is not connected, stop and say so instead of inventing figures. Features whose builders were held back from the plugin for privacy (lease JE, direct cash flow `dmv/build_cfd.py`, Tawuniya settlement, demo) keep their tab code but need their data rebuilt from SPEC.
 - **Project "AI Reporting HUB":** `claude/cfo-cure-kit-spec.md` (a copy of SPEC.md) plus the feature docs `claude/modeling-desk-*.md`. If the kit folder is missing, rebuild it from these.
 
 ## Workflow

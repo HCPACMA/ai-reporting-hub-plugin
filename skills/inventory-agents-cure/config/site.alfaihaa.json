@@ -1,0 +1,44 @@
+{
+  "site": "alfaihaa",
+  "company_name_ar": "مجموعة الفيحاء",
+  "erp": "EXSYS (Cure)",
+  "read_only_db_user_confirmed": true,
+  "mcp_server": "Cure_MCP",
+  "inventory_database_branch": "Riyadh",
+  "inventory_note": "All warehouses run on the Riyadh database for every branch; item cost single-sourced there.",
+  "cancelled_status": "C",
+  "tables": {
+    "transactions": "IM_PRODUCTS_TRANSACTIONS",
+    "purchase_returns": [
+      "IM_PURCHASE_INVOICE_RETURN_M",
+      "IM_PURCHASE_INVOICE_RETURN_D"
+    ],
+    "adjustments": [
+      "IM_STOCK_ADJUSTMENTS_M",
+      "IM_STOCK_ADJUSTMENTS_D"
+    ],
+    "attachments": "EX_ATTACHMENTS"
+  },
+  "folders": {
+    "hub_root": "D:/Financial Management/Financial Report/AI Reporting HUB",
+    "runs": "Inventory-Dept/runs",
+    "dashboard_work": "Inventory/alfaihaa",
+    "runbook": "Inventory/alfaihaa/REFRESH_RUNBOOK.md"
+  },
+  "dashboard": {
+    "live_slug": "c6fedd9e-4be1-423e-8b13-cef6a7189a13",
+    "demo_slug": "f107d052-0150-48b2-88ff-1c68d62ca424",
+    "capabilities": {
+      "downloads": {},
+      "sample": {},
+      "db": {},
+      "user": {
+        "scopes": [
+          "profile"
+        ]
+      }
+    }
+  },
+  "rules_dir": "rules/alfaihaa",
+  "language": "ar"
+}

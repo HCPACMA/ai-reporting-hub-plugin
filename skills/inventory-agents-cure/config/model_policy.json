@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "note": "Same scheme as Finance-Agents-Kit: haiku for single re-checks, sonnet default, opus for judgment.",
+  "roles": {
+    "inv-manager": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "board report requested"
+      ]
+    },
+    "inv-controller": {
+      "default": "opus",
+      "down_to_sonnet_when": [
+        "round-2 re-review of its own returned items"
+      ]
+    },
+    "inv-auditor": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "a fraud pattern needs investigation across several documents"
+      ]
+    },
+    "inv-receiving": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "the handoff was returned twice"
+      ]
+    },
+    "inv-count": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "the handoff was returned twice"
+      ]
+    },
+    "inv-expiry": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "the handoff was returned twice"
+      ]
+    },
+    "inv-planner": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "forecast model change or a new XYZ classification",
+        "the handoff was returned twice"
+      ]
+    },
+    "inv-purchasing": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "the handoff was returned twice"
+      ]
+    },
+    "inv-valuation": {
+      "default": "sonnet",
+      "up_to_opus_when": [
+        "valuation does not tie to the GL after standard adjustments",
+        "the handoff was returned twice"
+      ]
+    }
+  },
+  "task_overrides": {
+    "haiku": [
+      "re-check of one open finding",
+      "period setup, run-log, schema validation",
+      "answering a one-query referral"
+    ]
+  },
+  "self_escalation": "Agent sets model_escalation in its handoff and status blocked; dispatcher re-runs one level up, once per role per period."
+}
