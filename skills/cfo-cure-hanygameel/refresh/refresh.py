@@ -609,8 +609,8 @@ def build():
                 f['rc']['d'] = today; f['rc']['en'] = 'Not testable from data (register / historical / method) - carried forward. ' + f['rc']['en'].split(' - carried forward. ')[-1]
         if g('LEGOP'): v = float(g('LEGOP')[0][1]); setrc('F12', 'resolved' if abs(v) < 100000 else 'open', 'Opening 2123001 = %s' % format(v, ',.2f'), 'رصيد 2123001 الافتتاحي = %s' % format(v, ',.2f'))
         if g('CC'):
-            bad = [r for r in g('CC') if r[2] == '4300003' and r[3] == '000/000']
-            setrc('F02', 'open' if bad else 'resolved', '4300003 legs still on cost centre 000: ' + ', '.join(r[1] for r in bad) if bad else 'Reversal cost centres now match the invoices', 'طرف الإيراد على 000: ' + ', '.join(r[1] for r in bad) if bad else 'مراكز التكلفة متطابقة')
+            bad_cc = [r for r in g('CC') if r[2] == '4300003' and r[3] == '000/000']
+            setrc('F02', 'open' if bad_cc else 'resolved', '4300003 legs still on cost centre 000: ' + ', '.join(r[1] for r in bad_cc) if bad_cc else 'Reversal cost centres now match the invoices', 'طرف الإيراد على 000: ' + ', '.join(r[1] for r in bad_cc) if bad_cc else 'مراكز التكلفة متطابقة')
         if g('D09'):
             posted = [r for r in g('D09') if r[2] == 'P' and abs(float(r[3]) - 75000) < 1]
             anyr = [r for r in g('D09') if abs(float(r[3]) - 75000) < 1]

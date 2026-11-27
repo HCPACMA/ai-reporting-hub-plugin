@@ -1,6 +1,6 @@
 {
   "name": "ai-reporting-hub",
-  "version": "1.0.20261126",
+  "version": "1.0.20261127",
   "description": "Hany Gameel's AI Reporting HUB kits for EXSYS (Cure) ERP companies: CFO Modeling Desk (CFO-Cure), HR Command Center (HR-Cure), the AI finance and inventory department agents (Finance-Agents-Cure, Inventory-Agents-Cure) and the AI Reporting master playbook. Skills + code only; no company data.",
   "author": {
     "name": "Hany Gameel",
